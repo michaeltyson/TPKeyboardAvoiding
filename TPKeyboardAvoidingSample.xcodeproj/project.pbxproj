@@ -1,0 +1,314 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		27FE59C313573CB900AAD959 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27FE59C213573CB900AAD959 /* UIKit.framework */; };
+		27FE59C513573CB900AAD959 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27FE59C413573CB900AAD959 /* Foundation.framework */; };
+		27FE59C713573CB900AAD959 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27FE59C613573CB900AAD959 /* CoreGraphics.framework */; };
+		27FE59CD13573CB900AAD959 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 27FE59CB13573CB900AAD959 /* InfoPlist.strings */; };
+		27FE59D013573CB900AAD959 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE59CF13573CB900AAD959 /* main.m */; };
+		27FE59D313573CBA00AAD959 /* TPKeyboardAvoidingSampleAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE59D213573CBA00AAD959 /* TPKeyboardAvoidingSampleAppDelegate.m */; };
+		27FE59D613573CBA00AAD959 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27FE59D413573CBA00AAD959 /* MainWindow.xib */; };
+		27FE59D913573CBA00AAD959 /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE59D813573CBA00AAD959 /* FirstViewController.m */; };
+		27FE59DC13573CBA00AAD959 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE59DB13573CBA00AAD959 /* SecondViewController.m */; };
+		27FE59DF13573CBA00AAD959 /* FirstView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27FE59DD13573CBA00AAD959 /* FirstView.xib */; };
+		27FE59E213573CBA00AAD959 /* SecondView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27FE59E013573CBA00AAD959 /* SecondView.xib */; };
+		27FE59F413573CF300AAD959 /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE59F113573CF300AAD959 /* TPKeyboardAvoidingScrollView.m */; };
+		27FE59F513573CF300AAD959 /* TPKeyboardAvoidingTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE59F313573CF300AAD959 /* TPKeyboardAvoidingTableView.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		27FE59BE13573CB900AAD959 /* TPKeyboardAvoidingSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TPKeyboardAvoidingSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		27FE59C213573CB900AAD959 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		27FE59C413573CB900AAD959 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		27FE59C613573CB900AAD959 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		27FE59CA13573CB900AAD959 /* TPKeyboardAvoidingSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TPKeyboardAvoidingSample-Info.plist"; sourceTree = "<group>"; };
+		27FE59CC13573CB900AAD959 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		27FE59CE13573CB900AAD959 /* TPKeyboardAvoidingSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TPKeyboardAvoidingSample-Prefix.pch"; sourceTree = "<group>"; };
+		27FE59CF13573CB900AAD959 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		27FE59D113573CB900AAD959 /* TPKeyboardAvoidingSampleAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingSampleAppDelegate.h; sourceTree = "<group>"; };
+		27FE59D213573CBA00AAD959 /* TPKeyboardAvoidingSampleAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingSampleAppDelegate.m; sourceTree = "<group>"; };
+		27FE59D513573CBA00AAD959 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		27FE59D713573CBA00AAD959 /* FirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
+		27FE59D813573CBA00AAD959 /* FirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
+		27FE59DA13573CBA00AAD959 /* SecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
+		27FE59DB13573CBA00AAD959 /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
+		27FE59DE13573CBA00AAD959 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FirstView.xib; sourceTree = "<group>"; };
+		27FE59E113573CBA00AAD959 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SecondView.xib; sourceTree = "<group>"; };
+		27FE59F013573CF300AAD959 /* TPKeyboardAvoidingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingScrollView.h; sourceTree = SOURCE_ROOT; };
+		27FE59F113573CF300AAD959 /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingScrollView.m; sourceTree = SOURCE_ROOT; };
+		27FE59F213573CF300AAD959 /* TPKeyboardAvoidingTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingTableView.h; sourceTree = SOURCE_ROOT; };
+		27FE59F313573CF300AAD959 /* TPKeyboardAvoidingTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingTableView.m; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		27FE59BB13573CB900AAD959 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27FE59C313573CB900AAD959 /* UIKit.framework in Frameworks */,
+				27FE59C513573CB900AAD959 /* Foundation.framework in Frameworks */,
+				27FE59C713573CB900AAD959 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		27FE59B313573CB900AAD959 = {
+			isa = PBXGroup;
+			children = (
+				27FE59C813573CB900AAD959 /* TPKeyboardAvoidingSample */,
+				27FE59C113573CB900AAD959 /* Frameworks */,
+				27FE59BF13573CB900AAD959 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		27FE59BF13573CB900AAD959 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				27FE59BE13573CB900AAD959 /* TPKeyboardAvoidingSample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		27FE59C113573CB900AAD959 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				27FE59C213573CB900AAD959 /* UIKit.framework */,
+				27FE59C413573CB900AAD959 /* Foundation.framework */,
+				27FE59C613573CB900AAD959 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		27FE59C813573CB900AAD959 /* TPKeyboardAvoidingSample */ = {
+			isa = PBXGroup;
+			children = (
+				27FE59F013573CF300AAD959 /* TPKeyboardAvoidingScrollView.h */,
+				27FE59F113573CF300AAD959 /* TPKeyboardAvoidingScrollView.m */,
+				27FE59F213573CF300AAD959 /* TPKeyboardAvoidingTableView.h */,
+				27FE59F313573CF300AAD959 /* TPKeyboardAvoidingTableView.m */,
+				27FE59D113573CB900AAD959 /* TPKeyboardAvoidingSampleAppDelegate.h */,
+				27FE59D213573CBA00AAD959 /* TPKeyboardAvoidingSampleAppDelegate.m */,
+				27FE59D713573CBA00AAD959 /* FirstViewController.h */,
+				27FE59D813573CBA00AAD959 /* FirstViewController.m */,
+				27FE59DA13573CBA00AAD959 /* SecondViewController.h */,
+				27FE59DB13573CBA00AAD959 /* SecondViewController.m */,
+				27FE59D413573CBA00AAD959 /* MainWindow.xib */,
+				27FE59DD13573CBA00AAD959 /* FirstView.xib */,
+				27FE59E013573CBA00AAD959 /* SecondView.xib */,
+				27FE59C913573CB900AAD959 /* Supporting Files */,
+			);
+			path = TPKeyboardAvoidingSample;
+			sourceTree = "<group>";
+		};
+		27FE59C913573CB900AAD959 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				27FE59CA13573CB900AAD959 /* TPKeyboardAvoidingSample-Info.plist */,
+				27FE59CB13573CB900AAD959 /* InfoPlist.strings */,
+				27FE59CE13573CB900AAD959 /* TPKeyboardAvoidingSample-Prefix.pch */,
+				27FE59CF13573CB900AAD959 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		27FE59BD13573CB900AAD959 /* TPKeyboardAvoidingSample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27FE59E513573CBA00AAD959 /* Build configuration list for PBXNativeTarget "TPKeyboardAvoidingSample" */;
+			buildPhases = (
+				27FE59BA13573CB900AAD959 /* Sources */,
+				27FE59BB13573CB900AAD959 /* Frameworks */,
+				27FE59BC13573CB900AAD959 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TPKeyboardAvoidingSample;
+			productName = TPKeyboardAvoidingSample;
+			productReference = 27FE59BE13573CB900AAD959 /* TPKeyboardAvoidingSample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		27FE59B513573CB900AAD959 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 27FE59B813573CB900AAD959 /* Build configuration list for PBXProject "TPKeyboardAvoidingSample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 27FE59B313573CB900AAD959;
+			productRefGroup = 27FE59BF13573CB900AAD959 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				27FE59BD13573CB900AAD959 /* TPKeyboardAvoidingSample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		27FE59BC13573CB900AAD959 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27FE59CD13573CB900AAD959 /* InfoPlist.strings in Resources */,
+				27FE59D613573CBA00AAD959 /* MainWindow.xib in Resources */,
+				27FE59DF13573CBA00AAD959 /* FirstView.xib in Resources */,
+				27FE59E213573CBA00AAD959 /* SecondView.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		27FE59BA13573CB900AAD959 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27FE59D013573CB900AAD959 /* main.m in Sources */,
+				27FE59D313573CBA00AAD959 /* TPKeyboardAvoidingSampleAppDelegate.m in Sources */,
+				27FE59D913573CBA00AAD959 /* FirstViewController.m in Sources */,
+				27FE59DC13573CBA00AAD959 /* SecondViewController.m in Sources */,
+				27FE59F413573CF300AAD959 /* TPKeyboardAvoidingScrollView.m in Sources */,
+				27FE59F513573CF300AAD959 /* TPKeyboardAvoidingTableView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		27FE59CB13573CB900AAD959 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				27FE59CC13573CB900AAD959 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		27FE59D413573CBA00AAD959 /* MainWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				27FE59D513573CBA00AAD959 /* en */,
+			);
+			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
+		27FE59DD13573CBA00AAD959 /* FirstView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				27FE59DE13573CBA00AAD959 /* en */,
+			);
+			name = FirstView.xib;
+			sourceTree = "<group>";
+		};
+		27FE59E013573CBA00AAD959 /* SecondView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				27FE59E113573CBA00AAD959 /* en */,
+			);
+			name = SecondView.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		27FE59E313573CBA00AAD959 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		27FE59E413573CBA00AAD959 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		27FE59E613573CBA00AAD959 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TPKeyboardAvoidingSample/TPKeyboardAvoidingSample-Prefix.pch";
+				INFOPLIST_FILE = "TPKeyboardAvoidingSample/TPKeyboardAvoidingSample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		27FE59E713573CBA00AAD959 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TPKeyboardAvoidingSample/TPKeyboardAvoidingSample-Prefix.pch";
+				INFOPLIST_FILE = "TPKeyboardAvoidingSample/TPKeyboardAvoidingSample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		27FE59B813573CB900AAD959 /* Build configuration list for PBXProject "TPKeyboardAvoidingSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27FE59E313573CBA00AAD959 /* Debug */,
+				27FE59E413573CBA00AAD959 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27FE59E513573CBA00AAD959 /* Build configuration list for PBXNativeTarget "TPKeyboardAvoidingSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27FE59E613573CBA00AAD959 /* Debug */,
+				27FE59E713573CBA00AAD959 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 27FE59B513573CB900AAD959 /* Project object */;
+}
