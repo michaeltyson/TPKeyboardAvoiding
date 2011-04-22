@@ -39,7 +39,7 @@
 }
 
 - (void)keyboardWillShow:(NSNotification*)notification {
-    if ( resizedForKeyboard ) return;
+    if ( !CGRectEqualToRect(priorFrame, CGRectZero) ) return;
 
     UIView *firstResponder = [self findFirstResponderBeneathView:self];
     if ( !firstResponder ) {
@@ -47,21 +47,25 @@
         return;
     }
     
-    CGRect keyboardBounds = [[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    if ( keyboardBounds.origin.y == 0 ) keyboardBounds.origin = CGPointMake(0, [UIScreen mainScreen].bounds.size.height - keyboardBounds.size.height);
-    CGFloat spaceAboveKeyboard = keyboardBounds.origin.y - [self convertRect:self.bounds toView:self.window].origin.y;
+    priorFrame = self.frame;
+    
+    // Use this view's coordinate system
+    CGRect keyboardBounds = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    CGRect screenBounds = [self convertRect:[UIScreen mainScreen].bounds fromView:nil];
+    if ( keyboardBounds.origin.y == 0 ) keyboardBounds.origin = CGPointMake(0, screenBounds.size.height - keyboardBounds.size.height);
+    
+    CGFloat spaceAboveKeyboard = keyboardBounds.origin.y - self.bounds.origin.y;
     CGFloat offset = -1;
     
-    CGRect frameInScreenCoords = [self convertRect:self.bounds toView:nil];
     CGRect newFrame = self.frame;
     newFrame.size.height -= keyboardBounds.size.height - 
                                 ((keyboardBounds.origin.y+keyboardBounds.size.height) 
-                                    - (frameInScreenCoords.origin.y+frameInScreenCoords.size.height));
+                                    - (self.bounds.origin.y+self.bounds.size.height));
     
-    CGRect rectInScreen = [firstResponder convertRect:firstResponder.bounds toView:nil];
-    if ( rectInScreen.origin.y + rectInScreen.size.height >= [[UIScreen mainScreen] bounds].size.height - keyboardBounds.size.height ) {
+    CGRect firstResponderFrame = [firstResponder convertRect:firstResponder.bounds toView:self];
+    if ( firstResponderFrame.origin.y + firstResponderFrame.size.height >= screenBounds.origin.y + screenBounds.size.height - keyboardBounds.size.height ) {
         // Prepare to scroll to make sure the view is above the keyboard
-        offset = [firstResponder convertRect:firstResponder.bounds toView:self].origin.y + self.contentOffset.y;
+        offset = firstResponderFrame.origin.y + self.contentOffset.y;
         if ( self.contentSize.height - offset < newFrame.size.height ) {
             // Scroll to the bottom
             offset = self.contentSize.height - newFrame.size.height;
@@ -87,22 +91,17 @@
         [self setContentOffset:CGPointMake(self.contentOffset.x, offset) animated:YES];
     }
     [UIView commitAnimations];
-    
-    resizedForKeyboard = YES;
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification {
-    if ( !resizedForKeyboard ) return;
-    
-    resizedForKeyboard = NO;
+    if ( CGRectEqualToRect(priorFrame, CGRectZero) ) return;
     
     // Restore dimensions to prior size
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
-    CGRect frame = self.frame;
-    frame.size.height += [[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
-    self.frame = frame;
+    self.frame = priorFrame;
+    priorFrame = CGRectZero;
     [UIView commitAnimations];
 }
 

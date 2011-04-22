@@ -9,7 +9,7 @@
 
 
 @interface TPKeyboardAvoidingTableView : UITableView {
-    BOOL resizedForKeyboard;
+    CGRect priorFrame;
 }
 
 @end

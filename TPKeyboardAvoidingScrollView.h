@@ -9,7 +9,7 @@
 
 
 @interface TPKeyboardAvoidingScrollView : UIScrollView {
-    BOOL resizedForKeyboard;
+    CGRect priorFrame;
 }
 
 @end
