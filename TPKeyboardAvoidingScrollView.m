@@ -81,6 +81,7 @@
     [self setContentOffset:CGPointMake(self.contentOffset.x, offset) animated:YES];
     
     [UIView commitAnimations];
+    _keyboardVisible = true;
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification {
@@ -93,6 +94,7 @@
     self.contentInset = priorInset;
     priorInset = UIEdgeInsetsZero;
     [UIView commitAnimations];
+    _keyboardVisible = false;
 }
 
 - (UIView*)findFirstResponderBeneathView:(UIView*)view {
@@ -129,4 +131,17 @@
     
     return offset;
 }
+
+-(void)adjustOffsetToIdealIfNeeded
+{
+    //only do this if the keyboard is already visible
+    if (!_keyboardVisible) return;
+    
+    CGFloat visibleSpace = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
+    
+    CGPoint idealOffset = CGPointMake(0, [self idealOffsetForView:[self findFirstResponderBeneathView:self] withSpace:visibleSpace]); 
+    
+    [self setContentOffset:idealOffset animated:YES];                
+}
+
 @end
