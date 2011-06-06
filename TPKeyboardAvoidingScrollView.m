@@ -39,6 +39,10 @@
     [super dealloc];
 }
 
+- (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    [[self findFirstResponderBeneathView:self] resignFirstResponder];
+    [super touchesEnded:touches withEvent:event];
+} 
 
 - (void)keyboardWillShow:(NSNotification*)notification {
     if (!UIEdgeInsetsEqualToEdgeInsets(priorInset, UIEdgeInsetsZero)) return;
