@@ -111,7 +111,12 @@
 -(CGFloat)idealOffsetForView:(UIView *)view withSpace:(CGFloat)space
 {
     
-    CGFloat offset = view.frame.origin.y;
+    //Convert the rect to get the view's distance from the top of the scrollView.
+    CGRect rect = [view convertRect:view.bounds toView:self];
+    
+    //set starting offset to that point
+    CGFloat offset = rect.origin.y;
+    
     
     if ( self.contentSize.height - offset < space ) {
         // Scroll to the bottom
