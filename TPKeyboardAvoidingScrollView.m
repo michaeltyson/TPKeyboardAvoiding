@@ -45,8 +45,6 @@
 } 
 
 - (void)keyboardWillShow:(NSNotification*)notification {
-    if (!UIEdgeInsetsEqualToEdgeInsets(priorInset, UIEdgeInsetsZero)) return;
-    
     UIView *firstResponder = [self findFirstResponderBeneathView:self];
     if ( !firstResponder ) {
         // No child view is the first responder - nothing to do here
@@ -85,14 +83,12 @@
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification {
-    if (UIEdgeInsetsEqualToEdgeInsets(priorInset, UIEdgeInsetsZero)) return;
     
     // Restore dimensions to prior size
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
     self.contentInset = priorInset;
-    priorInset = UIEdgeInsetsZero;
     [UIView commitAnimations];
     _keyboardVisible = false;
 }
