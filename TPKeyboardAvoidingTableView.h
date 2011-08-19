@@ -5,11 +5,11 @@
 //  Copyright 2011 A Tasty Pixel. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
-
 @interface TPKeyboardAvoidingTableView : UITableView {
-    CGRect priorFrame;
+    UIEdgeInsets    _priorInset;
+    BOOL            _keyboardVisible;
+    CGRect          _keyboardRect;
 }
 
+- (void)adjustOffsetToIdealIfNeeded;
 @end

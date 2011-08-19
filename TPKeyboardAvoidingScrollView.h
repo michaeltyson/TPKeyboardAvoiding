@@ -6,8 +6,10 @@
 //
 
 @interface TPKeyboardAvoidingScrollView : UIScrollView {
-    UIEdgeInsets priorInset;
-    BOOL _keyboardVisible;
+    UIEdgeInsets    _priorInset;
+    BOOL            _keyboardVisible;
+    CGRect          _keyboardRect;
+    CGSize          _originalContentSize;
 }
 
 - (void)adjustOffsetToIdealIfNeeded;

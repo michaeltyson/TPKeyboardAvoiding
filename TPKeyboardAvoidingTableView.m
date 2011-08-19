@@ -11,6 +11,9 @@
 
 @interface TPKeyboardAvoidingTableView ()
 - (UIView*)findFirstResponderBeneathView:(UIView*)view;
+- (UIEdgeInsets)contentInsetForKeyboard;
+- (CGFloat)idealOffsetForView:(UIView *)view withSpace:(CGFloat)space;
+- (CGRect)keyboardRect;
 @end
 
 @implementation TPKeyboardAvoidingTableView
@@ -20,14 +23,30 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
-- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style {
-    if ( !(self = [super initWithFrame:frame style:style]) ) return nil;
+-(id)initWithFrame:(CGRect)frame {
+    if ( !(self = [super initWithFrame:frame]) ) return nil;
+    
+    if ( [[[UIDevice currentDevice] systemVersion] floatValue] >= 4.3 ) {
+        // Not required above iOS 4.3! Just return an ordinary table view
+        [self release];
+        return (self = [[UITableView alloc] initWithFrame:frame]);
+    }
+    
     [self setup];
     return self;
 }
 
--(void)awakeFromNib {
+-(id)initWithCoder:(NSCoder *)aDecoder {
+    if ( !(self = [super initWithCoder:aDecoder]) ) return nil;
+    
+    if ( [[[UIDevice currentDevice] systemVersion] floatValue] >= 4.3 ) {
+        // Not required above iOS 4.3! Just return an ordinary table view
+        [self release];
+        return (self = [[UITableView alloc] initWithCoder:aDecoder]);
+    }
+    
     [self setup];
+    return self;
 }
 
 -(void)dealloc {
@@ -35,9 +54,28 @@
     [super dealloc];
 }
 
+-(void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    if ( _keyboardVisible ) {
+        self.contentInset = [self contentInsetForKeyboard];
+    }
+}
+
+-(void)setContentSize:(CGSize)contentSize {
+    [super setContentSize:contentSize];
+    if ( _keyboardVisible ) {
+        self.contentInset = [self contentInsetForKeyboard];
+    }
+}
+
+- (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    [[self findFirstResponderBeneathView:self] resignFirstResponder];
+    [super touchesEnded:touches withEvent:event];
+} 
 
 - (void)keyboardWillShow:(NSNotification*)notification {
-    if ( !CGRectEqualToRect(priorFrame, CGRectZero) ) return;
+    _keyboardRect = [[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    _keyboardVisible = YES;
     
     UIView *firstResponder = [self findFirstResponderBeneathView:self];
     if ( !firstResponder ) {
@@ -45,61 +83,30 @@
         return;
     }
     
-    priorFrame = self.frame;
+    _priorInset = self.contentInset;
     
-    // Use this view's coordinate system
-    CGRect keyboardBounds = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
-    CGRect screenBounds = [self convertRect:[UIScreen mainScreen].bounds fromView:nil];
-    if ( keyboardBounds.origin.y == 0 ) keyboardBounds.origin = CGPointMake(0, screenBounds.size.height - keyboardBounds.size.height);
-    
-    CGFloat spaceAboveKeyboard = keyboardBounds.origin.y - self.bounds.origin.y;
-    CGFloat offset = -1;
-    
-    CGRect newFrame = self.frame;
-    newFrame.size.height -= keyboardBounds.size.height - 
-    ((keyboardBounds.origin.y+keyboardBounds.size.height) 
-     - (self.bounds.origin.y+self.bounds.size.height));
-    
-    CGRect firstResponderFrame = [firstResponder convertRect:firstResponder.bounds toView:self];
-    if ( firstResponderFrame.origin.y + firstResponderFrame.size.height >= screenBounds.origin.y + screenBounds.size.height - keyboardBounds.size.height ) {
-        // Prepare to scroll to make sure the view is above the keyboard
-        offset = firstResponderFrame.origin.y + self.contentOffset.y;
-        if ( self.contentSize.height - offset < newFrame.size.height ) {
-            // Scroll to the bottom
-            offset = self.contentSize.height - newFrame.size.height;
-        } else {
-            if ( firstResponder.bounds.size.height < spaceAboveKeyboard ) {
-                // Center vertically if there's room
-                offset -= floor((spaceAboveKeyboard-firstResponder.bounds.size.height)/2.0);
-            }
-            if ( offset + newFrame.size.height > self.contentSize.height ) {
-                // Clamp to content size
-                offset = self.contentSize.height - newFrame.size.height;
-            }
-        }
-    }
-    
-    // Shrink view's height by the keyboard's height, and scroll to show the text field/view being edited
+    // Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
-    self.frame = newFrame;
     
-    if ( offset != -1 ) {
-        [self setContentOffset:CGPointMake(self.contentOffset.x, offset) animated:YES];
-    }
+    self.contentInset = [self contentInsetForKeyboard];
+    [self setContentOffset:CGPointMake(self.contentOffset.x, 
+                                       [self idealOffsetForView:firstResponder withSpace:[self keyboardRect].origin.y - self.bounds.origin.y]) 
+                  animated:YES];
+    
     [UIView commitAnimations];
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification {
-    if ( CGRectEqualToRect(priorFrame, CGRectZero) ) return;
+    _keyboardRect = CGRectZero;
+    _keyboardVisible = NO;
     
     // Restore dimensions to prior size
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
-    self.frame = priorFrame;
-    priorFrame = CGRectZero;
+    self.contentInset = _priorInset;
     [UIView commitAnimations];
 }
 
@@ -111,6 +118,62 @@
         if ( result ) return result;
     }
     return nil;
+}
+
+- (UIEdgeInsets)contentInsetForKeyboard {
+    UIEdgeInsets newInset = self.contentInset;
+    CGRect keyboardRect = [self keyboardRect];
+    newInset.bottom = keyboardRect.size.height - ((keyboardRect.origin.y+keyboardRect.size.height) - (self.bounds.origin.y+self.bounds.size.height));
+    return newInset;
+}
+
+-(CGFloat)idealOffsetForView:(UIView *)view withSpace:(CGFloat)space {
+    
+    // Convert the rect to get the view's distance from the top of the scrollView.
+    CGRect rect = [view convertRect:view.bounds toView:self];
+    
+    // Set starting offset to that point
+    CGFloat offset = rect.origin.y;
+    
+    
+    if ( self.contentSize.height - offset < space ) {
+        // Scroll to the bottom
+        offset = self.contentSize.height - space;
+    } else {
+        if ( view.bounds.size.height < space ) {
+            // Center vertically if there's room
+            offset -= floor((space-view.bounds.size.height)/2.0);
+        }
+        if ( offset + space > self.contentSize.height ) {
+            // Clamp to content size
+            offset = self.contentSize.height - space;
+        }
+    }
+    
+    if (offset < 0) offset = 0;
+    
+    return offset;
+}
+
+-(void)adjustOffsetToIdealIfNeeded {
+    
+    // Only do this if the keyboard is already visible
+    if ( !_keyboardVisible ) return;
+    
+    CGFloat visibleSpace = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
+    
+    CGPoint idealOffset = CGPointMake(0, [self idealOffsetForView:[self findFirstResponderBeneathView:self] withSpace:visibleSpace]); 
+    
+    [self setContentOffset:idealOffset animated:YES];                
+}
+
+- (CGRect)keyboardRect {
+    CGRect keyboardRect = [self convertRect:_keyboardRect fromView:nil];
+    if ( keyboardRect.origin.y == 0 ) {
+        CGRect screenBounds = [self convertRect:[UIScreen mainScreen].bounds fromView:nil];
+        keyboardRect.origin = CGPointMake(0, screenBounds.size.height - keyboardRect.size.height);
+    }
+    return keyboardRect;
 }
 
 @end

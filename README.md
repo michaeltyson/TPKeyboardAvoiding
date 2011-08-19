@@ -21,6 +21,13 @@ For use with `UITableViewController` classes, drop `TPKeyboardAvoidingTableView.
 
 For non-UITableViewControllers, drop the `TPKeyboardAvoidingScrollView.m` and `TPKeyboardAvoidingScrollView.h` source files into your project, pop a `UIScrollView` into your view controller's xib, set the scroll view's class to `TPKeyboardAvoidingScrollView`, and put all your controls within that scroll view.  You can also create it programmatically, without using a xib - just use the TPKeyboardAvoidingScrollView as your top-level view.
 
+Notes
+-----
+
+On iOS 4.3 and up, UITableView automatically supports moving out of the way of the keyboard.  Thus, using TPKeyboardAvoidingTableView on iOS 4.3+ environments will have no effect -- in fact, if iOS 4.3 or up is detected, the init methods for TPKeyboardAvoidingTableView will return a UITableView instead.
+
+These classes currently adjust the contentInset parameter to avoid content moving beneath the keyboard.  This is done, as opposed to adjusting the frame, in order to work around an iOS bug that results in a jerky animation where the view jumps upwards, before settling down.  In order to facilitate this workaround, the contentSize is maintained to be at least same size as the view's frame.
+
 Licence
 -------
 
