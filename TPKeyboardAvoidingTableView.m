@@ -83,7 +83,10 @@
         return;
     }
     
-    _priorInset = self.contentInset;
+    if (!_priorInsetSaved) {
+        _priorInset = self.contentInset;
+        _priorInsetSaved = YES;
+    }
     
     // Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
     [UIView beginAnimations:nil context:NULL];
@@ -107,6 +110,7 @@
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
     self.contentInset = _priorInset;
+    _priorInsetSaved = NO;
     [UIView commitAnimations];
 }
 
