@@ -39,7 +39,7 @@
 
 -(void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super dealloc];
+//    [super dealloc];
 }
 
 -(void)setFrame:(CGRect)frame {
