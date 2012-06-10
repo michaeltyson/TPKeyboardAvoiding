@@ -37,7 +37,9 @@
 
 -(void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+#if !__has_feature(objc_arc) 
     [super dealloc];
+#endif
 }
 
 -(void)setFrame:(CGRect)frame {
@@ -83,6 +85,7 @@
     [self setContentOffset:CGPointMake(self.contentOffset.x, 
                                        [self idealOffsetForView:firstResponder withSpace:[self keyboardRect].origin.y - self.bounds.origin.y]) 
                   animated:YES];
+    [self setScrollIndicatorInsets:self.contentInset];
     
     [UIView commitAnimations];
 }
@@ -96,6 +99,7 @@
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
     self.contentInset = _priorInset;
+    [self setScrollIndicatorInsets:self.contentInset];
     _priorInsetSaved = NO;
     [UIView commitAnimations];
 }

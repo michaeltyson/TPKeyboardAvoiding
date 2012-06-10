@@ -9,8 +9,5 @@
 #import <UIKit/UIKit.h>
 
 
-@interface SecondViewController : UITableViewController <UITextFieldDelegate> {
-    
-}
-
+@interface SecondViewController : UITableViewController <UITextFieldDelegate>
 @end
