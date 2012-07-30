@@ -29,6 +29,12 @@
     return self;
 }
 
+-(id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style {
+    if ( !(self = [super initWithFrame:frame style:style]) ) return nil;
+    [self setup];
+    return self;
+}
+
 -(id)initWithCoder:(NSCoder *)aDecoder {
     if ( !(self = [super initWithCoder:aDecoder]) ) return nil;
     [self setup];
