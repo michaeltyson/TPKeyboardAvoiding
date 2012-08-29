@@ -5,6 +5,8 @@
 //  Copyright 2011 A Tasty Pixel. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
+
 @interface TPKeyboardAvoidingScrollView : UIScrollView {
     UIEdgeInsets    _priorInset;
     BOOL            _priorInsetSaved;
