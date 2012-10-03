@@ -112,6 +112,7 @@
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
     self.contentInset = _priorInset;
+    self.contentOffset = CGPointZero;
     [self setScrollIndicatorInsets:self.contentInset];
     _priorInsetSaved = NO;
     [UIView commitAnimations];
