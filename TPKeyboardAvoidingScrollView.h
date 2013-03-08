@@ -13,6 +13,7 @@
     BOOL            _keyboardVisible;
     CGRect          _keyboardRect;
     CGSize          _originalContentSize;
+    CGPoint         _originalContentOffset;
 }
 
 - (void)adjustOffsetToIdealIfNeeded;

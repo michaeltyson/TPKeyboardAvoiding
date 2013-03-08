@@ -39,14 +39,14 @@
 
 -(void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-#if !__has_feature(objc_arc) 
+#if !__has_feature(objc_arc)
     [super dealloc];
 #endif
 }
 
 -(void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-
+    
     CGSize contentSize = _originalContentSize;
     contentSize.width = MAX(contentSize.width, self.frame.size.width);
     contentSize.height = MAX(contentSize.height, self.frame.size.height);
@@ -72,7 +72,7 @@
 - (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     [[self findFirstResponderBeneathView:self] resignFirstResponder];
     [super touchesEnded:touches withEvent:event];
-} 
+}
 
 - (void)keyboardWillShow:(NSNotification*)notification {
     _keyboardRect = [[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue];
@@ -84,6 +84,8 @@
         return;
     }
     
+    _originalContentOffset = self.contentOffset;
+    
     if (!_priorInsetSaved) {
         _priorInset = self.contentInset;
         _priorInsetSaved = YES;
@@ -93,10 +95,10 @@
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
-
+    
     self.contentInset = [self contentInsetForKeyboard];
-    [self setContentOffset:CGPointMake(self.contentOffset.x, 
-                                       [self idealOffsetForView:firstResponder withSpace:[self keyboardRect].origin.y - self.bounds.origin.y]) 
+    [self setContentOffset:CGPointMake(self.contentOffset.x,
+                                       [self idealOffsetForView:firstResponder withSpace:[self keyboardRect].origin.y - self.bounds.origin.y])
                   animated:YES];
     [self setScrollIndicatorInsets:self.contentInset];
     
@@ -106,13 +108,13 @@
 - (void)keyboardWillHide:(NSNotification*)notification {
     _keyboardRect = CGRectZero;
     _keyboardVisible = NO;
-
+    
     // Restore dimensions to prior size
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
     self.contentInset = _priorInset;
-    self.contentOffset = CGPointZero;
+    self.contentOffset = _originalContentOffset;
     [self setScrollIndicatorInsets:self.contentInset];
     _priorInsetSaved = NO;
     [UIView commitAnimations];
@@ -170,9 +172,9 @@
     
     CGFloat visibleSpace = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
     
-    CGPoint idealOffset = CGPointMake(0, [self idealOffsetForView:[self findFirstResponderBeneathView:self] withSpace:visibleSpace]); 
+    CGPoint idealOffset = CGPointMake(0, [self idealOffsetForView:[self findFirstResponderBeneathView:self] withSpace:visibleSpace]);
     
-    [self setContentOffset:idealOffset animated:YES];                
+    [self setContentOffset:idealOffset animated:YES];
 }
 
 - (CGRect)keyboardRect {
