@@ -17,13 +17,15 @@
 @synthesize txtBogle;
 @synthesize txtSplat;
 
-/*
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self.scrollView  setContentSize:CGSizeMake(320, 520)];
 }
-*/
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
