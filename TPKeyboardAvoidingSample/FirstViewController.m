@@ -23,7 +23,12 @@
 {
     [super viewDidLoad];
     
-    [self.scrollView  setContentSize:CGSizeMake(320, 520)];
+    // Calculate content size given contents
+    CGRect contentRect = CGRectZero;
+    for ( UIView *subview in self.scrollView.subviews ) {
+        contentRect = CGRectUnion(contentRect, subview.frame);
+    }
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.size.width, CGRectGetMaxY(contentRect)+10);
 }
 
 
