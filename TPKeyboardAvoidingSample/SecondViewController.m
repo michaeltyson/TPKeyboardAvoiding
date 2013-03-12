@@ -99,23 +99,16 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
         
         UITextField *textField = [[[UITextField alloc] initWithFrame:CGRectMake(0, 0, 150, 30)] autorelease];
-        textField.delegate = self;
         textField.returnKeyType = UIReturnKeyDone;
         textField.borderStyle = UITextBorderStyleRoundedRect;
         cell.accessoryView = textField;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
     cell.textLabel.text = [NSString stringWithFormat:@"Order %d", indexPath.row];
     ((UITextField*)cell.accessoryView).placeholder = [NSString stringWithFormat:@"%d bananas", indexPath.row];
     
     return cell;
-}
-
-#pragma mark - Text field delegate
-
--(BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [textField resignFirstResponder];
-    return YES;
 }
 
 @end

@@ -7,12 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TPKeyboardAvoidingTableView : UITableView {
-    UIEdgeInsets    _priorInset;
-    BOOL            _priorInsetSaved;
-    BOOL            _keyboardVisible;
-    CGRect          _keyboardRect;
-}
-
-- (void)adjustOffsetToIdealIfNeeded;
+@interface TPKeyboardAvoidingTableView : UITableView
+- (BOOL)focusNextTextField;
+- (void)scrollToActiveTextField;
 @end

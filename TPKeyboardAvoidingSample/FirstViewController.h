@@ -10,11 +10,6 @@
 
 @class TPKeyboardAvoidingScrollView;
 
-@interface FirstViewController : UIViewController <UITextFieldDelegate>
+@interface FirstViewController : UIViewController
 @property (nonatomic, retain) IBOutlet TPKeyboardAvoidingScrollView *scrollView;
-@property (nonatomic, retain) IBOutlet UITextField *txtIggle;
-@property (nonatomic, retain) IBOutlet UITextField *txtNiggle;
-@property (nonatomic, retain) IBOutlet UITextField *txtOggle;
-@property (nonatomic, retain) IBOutlet UITextField *txtBogle;
-@property (nonatomic, retain) IBOutlet UITextField *txtSplat;
 @end
