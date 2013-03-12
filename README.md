@@ -14,6 +14,8 @@ When the keyboard is about to appear, the subclass will find the subview that's 
 
 It should work with basically any setup, either a UITableView-based interface, or one consisting of views placed manually.
 
+It also automatically hooks up "Next" buttons on the keyboard to switch through the text fields.
+
 Usage
 -----
 
@@ -23,8 +25,6 @@ For non-UITableViewControllers, drop the `TPKeyboardAvoidingScrollView.m` and `T
 
 Notes
 -----
-
-On iOS 4.3 and up, UITableView automatically supports moving out of the way of the keyboard.  Thus, using TPKeyboardAvoidingTableView on iOS 4.3+ environments will have no effect -- in fact, if iOS 4.3 or up is detected, the init methods for TPKeyboardAvoidingTableView will return a UITableView instead.
 
 These classes currently adjust the contentInset parameter to avoid content moving beneath the keyboard.  This is done, as opposed to adjusting the frame, in order to work around an iOS bug that results in a jerky animation where the view jumps upwards, before settling down.  In order to facilitate this workaround, the contentSize is maintained to be at least same size as the view's frame.
 
