@@ -43,6 +43,8 @@
     if ( !(self = [super initWithFrame:frame style:withStyle]) ) return nil;
     [self setup];
 return self;
+}
+
 -(void)awakeFromNib {
     [self setup];
 }
