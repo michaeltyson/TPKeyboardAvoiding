@@ -42,7 +42,7 @@
 -(id)initWithFrame:(CGRect)frame style:(UITableViewStyle)withStyle {
     if ( !(self = [super initWithFrame:frame style:withStyle]) ) return nil;
     [self setup];
-return self;
+    return self;
 }
 
 -(void)awakeFromNib {
