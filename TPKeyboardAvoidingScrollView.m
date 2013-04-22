@@ -179,8 +179,6 @@
     CGPoint idealOffset = CGPointMake(0, [self idealOffsetForView:[self findFirstResponderBeneathView:self] withSpace:visibleSpace]);
     
     [self setContentOffset:idealOffset animated:YES];
-    
-    _originalContentOffset = self.contentOffset;
 }
 
 #pragma mark - Helpers
