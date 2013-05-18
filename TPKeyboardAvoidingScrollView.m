@@ -15,7 +15,6 @@
     BOOL            _keyboardVisible;
     CGRect          _keyboardRect;
     CGSize          _originalContentSize;
-    CGPoint         _originalContentOffset;
 }
 - (UIView*)findFirstResponderBeneathView:(UIView*)view;
 - (UIEdgeInsets)contentInsetForKeyboard;
@@ -95,8 +94,6 @@
         return;
     }
     
-    _originalContentOffset = self.contentOffset;
-    
     if (!_priorInsetSaved) {
         _priorInset = self.contentInset;
         _priorInsetSaved = YES;
@@ -125,7 +122,6 @@
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
     self.contentInset = _priorInset;
-    self.contentOffset = _originalContentOffset;
     [self setScrollIndicatorInsets:self.contentInset];
     _priorInsetSaved = NO;
     [UIView commitAnimations];
@@ -272,6 +268,7 @@
             UIView *otherView = nil;
             CGFloat minY = CGFLOAT_MAX;
             [self findTextFieldAfterTextField:view beneathView:self minY:&minY foundView:&otherView];
+            
             if ( otherView ) {
                 ((UITextField*)view).returnKeyType = UIReturnKeyNext;
             } else {
