@@ -55,26 +55,13 @@
 -(void)setFrame:(CGRect)frame {
     [super setFrame:frame];
     
-    CGSize contentSize = _originalContentSize;
-    contentSize.width = MAX(contentSize.width, self.frame.size.width);
-    contentSize.height = MAX(contentSize.height, self.frame.size.height);
-    [super setContentSize:contentSize];
-    
-    if ( _keyboardVisible ) {
-        self.contentInset = [self contentInsetForKeyboard];
-    }
+    [self handleContentSize];
 }
 
 -(void)setContentSize:(CGSize)contentSize {
     _originalContentSize = contentSize;
     
-    contentSize.width = MAX(contentSize.width, self.frame.size.width);
-    contentSize.height = MAX(contentSize.height, self.frame.size.height);
-    [super setContentSize:contentSize];
-    
-    if ( _keyboardVisible ) {
-        self.contentInset = [self contentInsetForKeyboard];
-    }
+    [self handleContentSize];
 }
 
 #pragma mark - Responders, events
@@ -178,6 +165,17 @@
 }
 
 #pragma mark - Helpers
+
+-(void)handleContentSize {
+    CGSize contentSize = _originalContentSize;
+    contentSize.width = MAX(contentSize.width, self.frame.size.width);
+    contentSize.height = MAX(contentSize.height, self.frame.size.height);
+    [super setContentSize:contentSize];
+    
+    if ( _keyboardVisible ) {
+        self.contentInset = [self contentInsetForKeyboard];
+    }
+}
 
 - (UIView*)findFirstResponderBeneathView:(UIView*)view {
     // Search recursively for first responder
