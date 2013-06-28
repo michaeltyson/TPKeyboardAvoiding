@@ -64,6 +64,12 @@
     [self handleContentSize];
 }
 
+-(void)setAutoAdjustsContentSizeToBounds:(BOOL)autoAdjustsContentSizeToBounds {
+    _autoAdjustsContentSizeToBounds = autoAdjustsContentSizeToBounds;
+    
+    [self handleContentSize];
+}
+
 #pragma mark - Responders, events
 
 - (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -167,7 +173,7 @@
 #pragma mark - Helpers
 
 -(void)handleContentSize {
-    CGSize contentSize = _originalContentSize;
+    CGSize contentSize = _autoAdjustsContentSizeToBounds ? self.bounds.size : _originalContentSize;
     contentSize.width = MAX(contentSize.width, self.frame.size.width);
     contentSize.height = MAX(contentSize.height, self.frame.size.height);
     [super setContentSize:contentSize];
