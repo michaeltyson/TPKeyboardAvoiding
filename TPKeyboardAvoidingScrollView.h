@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 
 @interface TPKeyboardAvoidingScrollView : UIScrollView
+@property (assign, nonatomic) BOOL autoAdjustsContentSizeToBounds;
 - (BOOL)focusNextTextField;
 - (void)scrollToActiveTextField;
 @end
