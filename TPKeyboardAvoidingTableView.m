@@ -11,10 +11,8 @@
 
 @interface TPKeyboardAvoidingTableView () <UITextFieldDelegate, UITextViewDelegate> {
     UIEdgeInsets    _priorInset;
-    BOOL            _priorInsetSaved;
     BOOL            _keyboardVisible;
     CGRect          _keyboardRect;
-    CGSize          _originalContentSize;
 }
 - (UIView*)findFirstResponderBeneathView:(UIView*)view;
 - (UIEdgeInsets)contentInsetForKeyboard;
@@ -27,7 +25,6 @@
 #pragma mark - Setup/Teardown
 
 - (void)setup {
-    _priorInsetSaved = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
@@ -57,24 +54,13 @@
 
 -(void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-    
-    CGSize contentSize = _originalContentSize;
-    contentSize.width = MAX(contentSize.width, self.frame.size.width);
-    contentSize.height = MAX(contentSize.height, self.frame.size.height);
-    [super setContentSize:contentSize];
-    
     if ( _keyboardVisible ) {
         self.contentInset = [self contentInsetForKeyboard];
     }
 }
 
 -(void)setContentSize:(CGSize)contentSize {
-    _originalContentSize = contentSize;
-    
-    contentSize.width = MAX(contentSize.width, self.frame.size.width);
-    contentSize.height = MAX(contentSize.height, self.frame.size.height);
     [super setContentSize:contentSize];
-    
     if ( _keyboardVisible ) {
         self.contentInset = [self contentInsetForKeyboard];
     }
@@ -97,10 +83,7 @@
         return;
     }
     
-    if (!_priorInsetSaved) {
-        _priorInset = self.contentInset;
-        _priorInsetSaved = YES;
-    }
+    _priorInset = self.contentInset;
     
     // Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
     [UIView beginAnimations:nil context:NULL];
@@ -126,7 +109,6 @@
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
     self.contentInset = _priorInset;
     [self setScrollIndicatorInsets:self.contentInset];
-    _priorInsetSaved = NO;
     [UIView commitAnimations];
 }
 
