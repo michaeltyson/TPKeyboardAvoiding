@@ -9,12 +9,14 @@
 
 #define _UIKeyboardFrameEndUserInfoKey (&UIKeyboardFrameEndUserInfoKey != NULL ? UIKeyboardFrameEndUserInfoKey : @"UIKeyboardBoundsUserInfoKey")
 
+const CGFloat kCalculatedContentPadding = 10;
+
 @interface TPKeyboardAvoidingScrollView () <UITextFieldDelegate, UITextViewDelegate> {
     UIEdgeInsets    _priorInset;
-    BOOL            _priorInsetSaved;
     BOOL            _keyboardVisible;
     CGRect          _keyboardRect;
-    CGSize          _originalContentSize;
+    CGSize          _contentsSize;
+    CGSize          _priorContentSize;
 }
 - (UIView*)findFirstResponderBeneathView:(UIView*)view;
 - (UIEdgeInsets)contentInsetForKeyboard;
@@ -27,10 +29,6 @@
 #pragma mark - Setup/Teardown
 
 - (void)setup {
-    _priorInsetSaved = NO;
-    if ( CGSizeEqualToSize(self.contentSize, CGSizeZero) ) {
-        self.contentSize = self.bounds.size;
-    }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
@@ -54,20 +52,20 @@
 
 -(void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-    
-    [self handleContentSize];
+    if ( _keyboardVisible ) {
+        self.contentInset = [self contentInsetForKeyboard];
+    }
 }
 
 -(void)setContentSize:(CGSize)contentSize {
-    _originalContentSize = contentSize;
-    
-    [self handleContentSize];
+    [super setContentSize:contentSize];
+    if ( _keyboardVisible ) {
+        self.contentInset = [self contentInsetForKeyboard];
+    }
 }
 
--(void)setAutoAdjustsContentSizeToBounds:(BOOL)autoAdjustsContentSizeToBounds {
-    _autoAdjustsContentSizeToBounds = autoAdjustsContentSizeToBounds;
-    
-    [self handleContentSize];
+-(void)didAddSubview:(UIView *)subview {
+    _contentsSize = [self contentsSizeFromSubviewFrames];
 }
 
 #pragma mark - Responders, events
@@ -78,6 +76,11 @@
 }
 
 - (void)keyboardWillShow:(NSNotification*)notification {
+    if ( CGSizeEqualToSize(self.contentSize, CGSizeZero) ) {
+        // Set the content size, if it's not set
+        self.contentSize = CGSizeMake(_contentsSize.width + kCalculatedContentPadding, _contentsSize.height + kCalculatedContentPadding);
+    }
+    
     _keyboardRect = [[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue];
     _keyboardVisible = YES;
     
@@ -87,17 +90,18 @@
         return;
     }
     
-    if (!_priorInsetSaved) {
-        _priorInset = self.contentInset;
-        _priorInsetSaved = YES;
-    }
+    _priorInset = self.contentInset;
+    _priorContentSize = self.contentSize;
     
     // Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
     
+
+    
     self.contentInset = [self contentInsetForKeyboard];
+    
     [self setContentOffset:CGPointMake(self.contentOffset.x,
                                        [self idealOffsetForView:firstResponder withSpace:[self keyboardRect].origin.y - self.bounds.origin.y])
                   animated:YES];
@@ -114,9 +118,9 @@
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
+    self.contentSize = _priorContentSize;
     self.contentInset = _priorInset;
     [self setScrollIndicatorInsets:self.contentInset];
-    _priorInsetSaved = NO;
     [UIView commitAnimations];
 }
 
@@ -172,17 +176,6 @@
 
 #pragma mark - Helpers
 
--(void)handleContentSize {
-    CGSize contentSize = _autoAdjustsContentSizeToBounds ? self.bounds.size : _originalContentSize;
-    contentSize.width = MAX(contentSize.width, self.frame.size.width);
-    contentSize.height = MAX(contentSize.height, self.frame.size.height);
-    [super setContentSize:contentSize];
-    
-    if ( _keyboardVisible ) {
-        self.contentInset = [self contentInsetForKeyboard];
-    }
-}
-
 - (UIView*)findFirstResponderBeneathView:(UIView*)view {
     // Search recursively for first responder
     for ( UIView *childView in view.subviews ) {
@@ -218,6 +211,14 @@
             [self initializeViewsBeneathView:childView];
         }
     }
+}
+
+-(CGSize)contentsSizeFromSubviewFrames {
+    CGRect rect = CGRectZero;
+    for ( UIView *view in self.subviews ) {
+        rect = CGRectUnion(rect, view.frame);
+    }
+    return rect.size;
 }
 
 - (UIEdgeInsets)contentInsetForKeyboard {
