@@ -60,6 +60,7 @@ const CGFloat kCalculatedContentPadding = 10;
 -(void)setContentSize:(CGSize)contentSize {
     [super setContentSize:contentSize];
     if ( _keyboardVisible ) {
+		_priorContentSize = self.contentSize;
         self.contentInset = [self contentInsetForKeyboard];
     }
 }
