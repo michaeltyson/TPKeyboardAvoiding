@@ -46,6 +46,8 @@
 		27FE59F213573CF300AAD959 /* TPKeyboardAvoidingTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingTableView.h; sourceTree = SOURCE_ROOT; };
 		27FE59F313573CF300AAD959 /* TPKeyboardAvoidingTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingTableView.m; sourceTree = SOURCE_ROOT; };
 		4CD6AB88178D53060019F56A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		9094AEB317AD52C6002241F8 /* TPKeyboardAvoidingCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingCollectionView.h; sourceTree = SOURCE_ROOT; };
+		9094AEB417AD52C6002241F8 /* TPKeyboardAvoidingCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingCollectionView.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,20 +95,22 @@
 		27FE59C813573CB900AAD959 /* TPKeyboardAvoidingSample */ = {
 			isa = PBXGroup;
 			children = (
+				27FE59DD13573CBA00AAD959 /* FirstView.xib */,
+				27FE59D713573CBA00AAD959 /* FirstViewController.h */,
+				27FE59D813573CBA00AAD959 /* FirstViewController.m */,
+				27FE59D413573CBA00AAD959 /* MainWindow.xib */,
+				27FE59E013573CBA00AAD959 /* SecondView.xib */,
+				27FE59DA13573CBA00AAD959 /* SecondViewController.h */,
+				27FE59DB13573CBA00AAD959 /* SecondViewController.m */,
+				27FE59C913573CB900AAD959 /* Supporting Files */,
+				9094AEB317AD52C6002241F8 /* TPKeyboardAvoidingCollectionView.h */,
+				9094AEB417AD52C6002241F8 /* TPKeyboardAvoidingCollectionView.m */,
+				27FE59D113573CB900AAD959 /* TPKeyboardAvoidingSampleAppDelegate.h */,
+				27FE59D213573CBA00AAD959 /* TPKeyboardAvoidingSampleAppDelegate.m */,
 				27FE59F013573CF300AAD959 /* TPKeyboardAvoidingScrollView.h */,
 				27FE59F113573CF300AAD959 /* TPKeyboardAvoidingScrollView.m */,
 				27FE59F213573CF300AAD959 /* TPKeyboardAvoidingTableView.h */,
 				27FE59F313573CF300AAD959 /* TPKeyboardAvoidingTableView.m */,
-				27FE59D113573CB900AAD959 /* TPKeyboardAvoidingSampleAppDelegate.h */,
-				27FE59D213573CBA00AAD959 /* TPKeyboardAvoidingSampleAppDelegate.m */,
-				27FE59D713573CBA00AAD959 /* FirstViewController.h */,
-				27FE59D813573CBA00AAD959 /* FirstViewController.m */,
-				27FE59DA13573CBA00AAD959 /* SecondViewController.h */,
-				27FE59DB13573CBA00AAD959 /* SecondViewController.m */,
-				27FE59D413573CBA00AAD959 /* MainWindow.xib */,
-				27FE59DD13573CBA00AAD959 /* FirstView.xib */,
-				27FE59E013573CBA00AAD959 /* SecondView.xib */,
-				27FE59C913573CB900AAD959 /* Supporting Files */,
 			);
 			path = TPKeyboardAvoidingSample;
 			sourceTree = "<group>";
