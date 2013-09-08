@@ -11,6 +11,7 @@
 
 @interface TPKeyboardAvoidingTableView () <UITextFieldDelegate, UITextViewDelegate> {
     UIEdgeInsets    _priorInset;
+    UIEdgeInsets    _priorScrollIndicatorInsets;
     BOOL            _keyboardVisible;
     CGRect          _keyboardRect;
 }
@@ -84,6 +85,7 @@
     }
     
     _priorInset = self.contentInset;
+    _priorScrollIndicatorInsets = self.scrollIndicatorInsets;
     
     // Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
     [UIView beginAnimations:nil context:NULL];
@@ -108,7 +110,7 @@
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
     self.contentInset = _priorInset;
-    [self setScrollIndicatorInsets:self.contentInset];
+    self.scrollIndicatorInsets = _priorScrollIndicatorInsets;
     [UIView commitAnimations];
 }
 
