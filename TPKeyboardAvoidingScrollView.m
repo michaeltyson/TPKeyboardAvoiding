@@ -13,6 +13,7 @@ const CGFloat kCalculatedContentPadding = 10;
 
 @interface TPKeyboardAvoidingScrollView () <UITextFieldDelegate, UITextViewDelegate> {
     UIEdgeInsets    _priorInset;
+    UIEdgeInsets    _priorScrollIndicatorInsets;
     BOOL            _keyboardVisible;
     CGRect          _keyboardRect;
     CGSize          _contentsSize;
@@ -92,6 +93,7 @@ const CGFloat kCalculatedContentPadding = 10;
     }
     
     _priorInset = self.contentInset;
+    _priorScrollIndicatorInsets = self.scrollIndicatorInsets;
     _priorContentSize = self.contentSize;
     
     // Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
@@ -121,7 +123,7 @@ const CGFloat kCalculatedContentPadding = 10;
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
     self.contentSize = _priorContentSize;
     self.contentInset = _priorInset;
-    [self setScrollIndicatorInsets:self.contentInset];
+    self.scrollIndicatorInsets = _priorScrollIndicatorInsets;
     [UIView commitAnimations];
 }
 
