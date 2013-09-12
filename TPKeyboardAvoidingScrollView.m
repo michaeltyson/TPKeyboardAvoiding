@@ -83,15 +83,14 @@ const CGFloat kCalculatedContentPadding = 10;
         self.contentSize = CGSizeMake(_contentsSize.width + kCalculatedContentPadding, _contentsSize.height + kCalculatedContentPadding);
     }
     
-    _keyboardRect = [[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    _keyboardVisible = YES;
-    
     UIView *firstResponder = [self findFirstResponderBeneathView:self];
     if ( !firstResponder ) {
         // No child view is the first responder - nothing to do here
         return;
     }
     
+    _keyboardRect = [[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    _keyboardVisible = YES;
     _priorInset = self.contentInset;
     _priorScrollIndicatorInsets = self.scrollIndicatorInsets;
     _priorContentSize = self.contentSize;
@@ -114,6 +113,10 @@ const CGFloat kCalculatedContentPadding = 10;
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification {
+    
+    if (!_keyboardVisible)
+        return;
+    
     _keyboardRect = CGRectZero;
     _keyboardVisible = NO;
     
