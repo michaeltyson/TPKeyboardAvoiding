@@ -200,9 +200,12 @@ const CGFloat kCalculatedContentPadding = 10;
         if ( childView.hidden ) continue;
         if ( ([childView isKindOfClass:[UITextField class]] || [childView isKindOfClass:[UITextView class]]) ) {
             CGRect frame = [self convertRect:childView.frame fromView:view];
-            if ( childView != priorTextField && CGRectGetMinY(frame) >= priorFieldOffset && CGRectGetMinY(frame) < *minY ) {
-                *minY = CGRectGetMinY(frame);
-                *foundView = childView;
+            if ( childView != priorTextField  && CGRectGetMinY(frame) < *minY  ) {
+                if ( CGRectGetMinY(frame) > priorFieldOffset || (CGRectGetMinY(frame) == priorFieldOffset && frame.origin.x > priorTextField.frame.origin.x)){
+                    *minY = CGRectGetMinY(frame);
+                    *foundView = childView;
+                }
+                
             }
         } else {
             [self findTextFieldAfterTextField:priorTextField beneathView:childView minY:minY foundView:foundView];
