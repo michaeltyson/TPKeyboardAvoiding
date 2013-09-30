@@ -7,9 +7,11 @@
 //
 
 #import "UIScrollView+TPKeyboardAvoidingAdditions.h"
+#import "TPKeyboardAvoidingScrollView.h"
 #import <objc/runtime.h>
 
-const CGFloat kCalculatedContentPadding = 10;
+static const CGFloat kCalculatedContentPadding = 10;
+static const CGFloat kMinimumScrollOffsetPadding = 20;
 
 static const int kStateKey;
 
@@ -50,11 +52,13 @@ static const int kStateKey;
     state.priorInset = self.contentInset;
     state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
     
-    state.priorContentSize = self.contentSize;
-    
-    if ( CGSizeEqualToSize(self.contentSize, CGSizeZero) ) {
-        // Set the content size, if it's not set
-        self.contentSize = [self calculatedContentSizeFromSubviewFrames];
+    if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
+        state.priorContentSize = self.contentSize;
+        
+        if ( CGSizeEqualToSize(self.contentSize, CGSizeZero) ) {
+            // Set the content size, if it's not set
+            self.contentSize = [self calculatedContentSizeFromSubviewFrames];
+        }
     }
     
     // Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
@@ -63,12 +67,11 @@ static const int kStateKey;
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
     
     self.contentInset = [self contentInsetForKeyboard];
-    
     [self setContentOffset:CGPointMake(self.contentOffset.x,
-                                       [self idealOffsetForView:firstResponder
-                                                      withViewingAreaHeight:state.keyboardRect.origin.y - [self convertPoint:self.bounds.origin toView:nil].y])
-                  animated:YES];
-    [self setScrollIndicatorInsets:self.contentInset];
+                                    [self idealOffsetForView:firstResponder
+                                       withViewingAreaHeight:CGRectGetMinY(state.keyboardRect) - CGRectGetMinY([self convertRect:self.bounds toView:nil])])
+                  animated:NO];
+    self.scrollIndicatorInsets = self.contentInset;
     
     [UIView commitAnimations];
 }
@@ -87,7 +90,11 @@ static const int kStateKey;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
-    self.contentSize = state.priorContentSize;
+    
+    if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
+        self.contentSize = state.priorContentSize;
+    }
+    
     self.contentInset = state.priorInset;
     self.scrollIndicatorInsets = state.priorScrollIndicatorInsets;
     [UIView commitAnimations];
@@ -189,36 +196,40 @@ static const int kStateKey;
 }
 
 - (UIEdgeInsets)contentInsetForKeyboard {
+    TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     UIEdgeInsets newInset = self.contentInset;
-    CGRect keyboardRect = [self keyboardRect];
-    newInset.bottom = keyboardRect.size.height - ((keyboardRect.origin.y+keyboardRect.size.height) - (self.bounds.origin.y+self.bounds.size.height));
+    CGRect keyboardRect = state.keyboardRect;
+    newInset.bottom = keyboardRect.size.height
+                        - (CGRectGetMaxY(keyboardRect) - CGRectGetMaxY([self convertRect:self.bounds toView:nil]));
     return newInset;
 }
 
 -(CGFloat)idealOffsetForView:(UIView *)view withViewingAreaHeight:(CGFloat)viewAreaHeight {
     
     // Convert the rect to get the view's distance from the top of the scrollView.
-    CGRect rect = [view convertRect:view.bounds toView:self];
+    CGRect rect = CGRectInset([view convertRect:view.bounds toView:self], 0, -kMinimumScrollOffsetPadding);
     
-    // Set starting offset to that point
-    CGFloat offset = rect.origin.y;
+    CGFloat offset;
     
-    
-    if ( self.contentSize.height - offset < viewAreaHeight ) {
+    if ( self.contentSize.height - rect.origin.y < viewAreaHeight ) {
         // Scroll to the bottom
         offset = self.contentSize.height - viewAreaHeight;
     } else {
+        offset = CGRectGetMinY(rect);
+        
         if ( view.bounds.size.height < viewAreaHeight ) {
             // Center vertically if there's room
-            offset -= floor((viewAreaHeight-view.bounds.size.height)/2.0);
+            offset = CGRectGetMinY(rect) - floor((viewAreaHeight-rect.size.height)/2.0);
         }
-        if ( offset + viewAreaHeight > self.contentSize.height ) {
+        if ( rect.origin.y + viewAreaHeight > self.contentSize.height ) {
             // Clamp to content size
             offset = self.contentSize.height - viewAreaHeight;
         }
     }
     
-    if (offset < 0) offset = 0;
+    if ( offset < 0 ) {
+        offset = 0;
+    }
     
     return offset;
 }
