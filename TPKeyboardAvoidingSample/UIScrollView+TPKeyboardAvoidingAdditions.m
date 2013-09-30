@@ -66,7 +66,7 @@ static const int kStateKey;
     
     [self setContentOffset:CGPointMake(self.contentOffset.x,
                                        [self idealOffsetForView:firstResponder
-                                                      withSpace:state.keyboardRect.origin.y - [self convertPoint:self.bounds.origin toView:nil].y])
+                                                      withViewingAreaHeight:state.keyboardRect.origin.y - [self convertPoint:self.bounds.origin toView:nil].y])
                   animated:YES];
     [self setScrollIndicatorInsets:self.contentInset];
     
@@ -135,7 +135,7 @@ static const int kStateKey;
     
     CGFloat visibleSpace = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
     
-    CGPoint idealOffset = CGPointMake(0, [self idealOffsetForView:[self findFirstResponderBeneathView:self] withSpace:visibleSpace]);
+    CGPoint idealOffset = CGPointMake(0, [self idealOffsetForView:[self findFirstResponderBeneathView:self] withViewingAreaHeight:visibleSpace]);
     
     [self setContentOffset:idealOffset animated:YES];
 }
@@ -195,7 +195,7 @@ static const int kStateKey;
     return newInset;
 }
 
--(CGFloat)idealOffsetForView:(UIView *)view withSpace:(CGFloat)space {
+-(CGFloat)idealOffsetForView:(UIView *)view withViewingAreaHeight:(CGFloat)viewAreaHeight {
     
     // Convert the rect to get the view's distance from the top of the scrollView.
     CGRect rect = [view convertRect:view.bounds toView:self];
@@ -204,17 +204,17 @@ static const int kStateKey;
     CGFloat offset = rect.origin.y;
     
     
-    if ( self.contentSize.height - offset < space ) {
+    if ( self.contentSize.height - offset < viewAreaHeight ) {
         // Scroll to the bottom
-        offset = self.contentSize.height - space;
+        offset = self.contentSize.height - viewAreaHeight;
     } else {
-        if ( view.bounds.size.height < space ) {
+        if ( view.bounds.size.height < viewAreaHeight ) {
             // Center vertically if there's room
-            offset -= floor((space-view.bounds.size.height)/2.0);
+            offset -= floor((viewAreaHeight-view.bounds.size.height)/2.0);
         }
-        if ( offset + space > self.contentSize.height ) {
+        if ( offset + viewAreaHeight > self.contentSize.height ) {
             // Clamp to content size
-            offset = self.contentSize.height - space;
+            offset = self.contentSize.height - viewAreaHeight;
         }
     }
     
