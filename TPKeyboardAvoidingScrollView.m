@@ -16,7 +16,6 @@ const CGFloat kCalculatedContentPadding = 10;
     UIEdgeInsets    _priorScrollIndicatorInsets;
     BOOL            _keyboardVisible;
     CGRect          _keyboardRect;
-    CGSize          _contentsSize;
     CGSize          _priorContentSize;
 }
 - (UIView*)findFirstResponderBeneathView:(UIView*)view;
@@ -66,8 +65,8 @@ const CGFloat kCalculatedContentPadding = 10;
     }
 }
 
--(void)didAddSubview:(UIView *)subview {
-    _contentsSize = [self contentsSizeFromSubviewFrames];
+- (void)contentSizeToFit {
+    self.contentSize = [self calculatedContentSizeFromSubviewFrames];
 }
 
 #pragma mark - Responders, events
@@ -80,7 +79,7 @@ const CGFloat kCalculatedContentPadding = 10;
 - (void)keyboardWillShow:(NSNotification*)notification {
     if ( CGSizeEqualToSize(self.contentSize, CGSizeZero) ) {
         // Set the content size, if it's not set
-        self.contentSize = CGSizeMake(_contentsSize.width + kCalculatedContentPadding, _contentsSize.height + kCalculatedContentPadding);
+        self.contentSize = [self calculatedContentSizeFromSubviewFrames];
     }
     
     UIView *firstResponder = [self findFirstResponderBeneathView:self];
@@ -220,11 +219,12 @@ const CGFloat kCalculatedContentPadding = 10;
     }
 }
 
--(CGSize)contentsSizeFromSubviewFrames {
+-(CGSize)calculatedContentSizeFromSubviewFrames {
     CGRect rect = CGRectZero;
     for ( UIView *view in self.subviews ) {
         rect = CGRectUnion(rect, view.frame);
     }
+    rect.size.height += kCalculatedContentPadding;
     return rect.size;
 }
 
