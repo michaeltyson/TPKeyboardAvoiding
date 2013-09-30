@@ -65,7 +65,8 @@ static const int kStateKey;
     self.contentInset = [self contentInsetForKeyboard];
     
     [self setContentOffset:CGPointMake(self.contentOffset.x,
-                                       [self idealOffsetForView:firstResponder withSpace:state.keyboardRect.origin.y - self.bounds.origin.y])
+                                       [self idealOffsetForView:firstResponder
+                                                      withSpace:state.keyboardRect.origin.y - [self convertPoint:self.bounds.origin toView:nil].y])
                   animated:YES];
     [self setScrollIndicatorInsets:self.contentInset];
     
