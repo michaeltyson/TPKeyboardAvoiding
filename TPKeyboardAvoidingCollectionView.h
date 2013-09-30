@@ -6,10 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIScrollView+TPKeyboardAvoidingAdditions.h"
 
 @interface TPKeyboardAvoidingCollectionView : UICollectionView
-
-- (BOOL)focusNextTextField;
-- (void)scrollToActiveTextField;
-
 @end
