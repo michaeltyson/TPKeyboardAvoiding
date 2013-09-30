@@ -9,14 +9,14 @@
 #import <Foundation/Foundation.h>
 
 @interface UIScrollView (TPKeyboardAvoidingAdditions)
-- (BOOL)focusNextTextField;
-- (void)scrollToActiveTextField;
+- (BOOL)TPKeyboardAvoiding_focusNextTextField;
+- (void)TPKeyboardAvoiding_scrollToActiveTextField;
 
 - (void)TPKeyboardAvoiding_keyboardWillShow:(NSNotification*)notification;
 - (void)TPKeyboardAvoiding_keyboardWillHide:(NSNotification*)notification;
-- (void)updateContentInset;
-- (void)updateFromContentSizeChange;
-- (void)assignTextDelegateForViewsBeneathView:(UIView*)view;
-- (UIView*)findFirstResponderBeneathView:(UIView*)view;
--(CGSize)calculatedContentSizeFromSubviewFrames;
+- (void)TPKeyboardAvoiding_updateContentInset;
+- (void)TPKeyboardAvoiding_updateFromContentSizeChange;
+- (void)TPKeyboardAvoiding_assignTextDelegateForViewsBeneathView:(UIView*)view;
+- (UIView*)TPKeyboardAvoiding_findFirstResponderBeneathView:(UIView*)view;
+-(CGSize)TPKeyboardAvoiding_calculatedContentSizeFromSubviewFrames;
 @end

@@ -9,4 +9,6 @@
 #import "UIScrollView+TPKeyboardAvoidingAdditions.h"
 
 @interface TPKeyboardAvoidingTableView : UITableView
+- (BOOL)focusNextTextField;
+- (void)scrollToActiveTextField;
 @end

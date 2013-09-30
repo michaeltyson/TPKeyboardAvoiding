@@ -38,22 +38,30 @@
 
 -(void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-    [self updateContentInset];
+    [self TPKeyboardAvoiding_updateContentInset];
 }
 
 -(void)setContentSize:(CGSize)contentSize {
     [super setContentSize:contentSize];
-    [self updateFromContentSizeChange];
+    [self TPKeyboardAvoiding_updateFromContentSizeChange];
 }
 
 - (void)contentSizeToFit {
-    self.contentSize = [self calculatedContentSizeFromSubviewFrames];
+    self.contentSize = [self TPKeyboardAvoiding_calculatedContentSizeFromSubviewFrames];
+}
+
+- (BOOL)focusNextTextField {
+    return [self TPKeyboardAvoiding_focusNextTextField];
+    
+}
+- (void)scrollToActiveTextField {
+    return [self TPKeyboardAvoiding_scrollToActiveTextField];
 }
 
 #pragma mark - Responders, events
 
 - (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    [[self findFirstResponderBeneathView:self] resignFirstResponder];
+    [[self TPKeyboardAvoiding_findFirstResponderBeneathView:self] resignFirstResponder];
     [super touchesEnded:touches withEvent:event];
 }
 
@@ -74,7 +82,7 @@
 
 -(void)layoutSubviews {
     [super layoutSubviews];
-    [self assignTextDelegateForViewsBeneathView:self];
+    [self TPKeyboardAvoiding_assignTextDelegateForViewsBeneathView:self];
 }
 
 @end
