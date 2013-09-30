@@ -18,11 +18,11 @@
 		27FE59DC13573CBA00AAD959 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE59DB13573CBA00AAD959 /* SecondViewController.m */; };
 		27FE59DF13573CBA00AAD959 /* FirstView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27FE59DD13573CBA00AAD959 /* FirstView.xib */; };
 		27FE59E213573CBA00AAD959 /* SecondView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27FE59E013573CBA00AAD959 /* SecondView.xib */; };
-		27FE59F413573CF300AAD959 /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE59F113573CF300AAD959 /* TPKeyboardAvoidingScrollView.m */; };
-		27FE59F513573CF300AAD959 /* TPKeyboardAvoidingTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE59F313573CF300AAD959 /* TPKeyboardAvoidingTableView.m */; };
-		4CD019A417F9156700435B2E /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD019A317F9156700435B2E /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
-		4CD019A617F91C9A00435B2E /* TPKeyboardAvoidingCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9094AEB417AD52C6002241F8 /* TPKeyboardAvoidingCollectionView.m */; };
-		4CD6AB89178D53060019F56A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD6AB88178D53060019F56A /* Default-568h@2x.png */; };
+		4CD019AF17F9302E00435B2E /* TPKeyboardAvoidingCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD019A817F9302E00435B2E /* TPKeyboardAvoidingCollectionView.m */; };
+		4CD019B017F9302E00435B2E /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD019AA17F9302E00435B2E /* TPKeyboardAvoidingScrollView.m */; };
+		4CD019B117F9302E00435B2E /* TPKeyboardAvoidingTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD019AC17F9302E00435B2E /* TPKeyboardAvoidingTableView.m */; };
+		4CD019B217F9302E00435B2E /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD019AE17F9302E00435B2E /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
+		4CD019B417F9303B00435B2E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD019B317F9303B00435B2E /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,15 +43,15 @@
 		27FE59DB13573CBA00AAD959 /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
 		27FE59DE13573CBA00AAD959 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FirstView.xib; sourceTree = "<group>"; };
 		27FE59E113573CBA00AAD959 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SecondView.xib; sourceTree = "<group>"; };
-		27FE59F013573CF300AAD959 /* TPKeyboardAvoidingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingScrollView.h; sourceTree = SOURCE_ROOT; };
-		27FE59F113573CF300AAD959 /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingScrollView.m; sourceTree = SOURCE_ROOT; };
-		27FE59F213573CF300AAD959 /* TPKeyboardAvoidingTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingTableView.h; sourceTree = SOURCE_ROOT; };
-		27FE59F313573CF300AAD959 /* TPKeyboardAvoidingTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingTableView.m; sourceTree = SOURCE_ROOT; };
-		4CD019A217F9156700435B2E /* UIScrollView+TPKeyboardAvoidingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+TPKeyboardAvoidingAdditions.h"; sourceTree = "<group>"; };
-		4CD019A317F9156700435B2E /* UIScrollView+TPKeyboardAvoidingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+TPKeyboardAvoidingAdditions.m"; sourceTree = "<group>"; };
-		4CD6AB88178D53060019F56A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
-		9094AEB317AD52C6002241F8 /* TPKeyboardAvoidingCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingCollectionView.h; sourceTree = SOURCE_ROOT; };
-		9094AEB417AD52C6002241F8 /* TPKeyboardAvoidingCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingCollectionView.m; sourceTree = SOURCE_ROOT; };
+		4CD019A717F9302E00435B2E /* TPKeyboardAvoidingCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TPKeyboardAvoidingCollectionView.h; path = TPKeyboardAvoiding/TPKeyboardAvoidingCollectionView.h; sourceTree = SOURCE_ROOT; };
+		4CD019A817F9302E00435B2E /* TPKeyboardAvoidingCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TPKeyboardAvoidingCollectionView.m; path = TPKeyboardAvoiding/TPKeyboardAvoidingCollectionView.m; sourceTree = SOURCE_ROOT; };
+		4CD019A917F9302E00435B2E /* TPKeyboardAvoidingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TPKeyboardAvoidingScrollView.h; path = TPKeyboardAvoiding/TPKeyboardAvoidingScrollView.h; sourceTree = SOURCE_ROOT; };
+		4CD019AA17F9302E00435B2E /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TPKeyboardAvoidingScrollView.m; path = TPKeyboardAvoiding/TPKeyboardAvoidingScrollView.m; sourceTree = SOURCE_ROOT; };
+		4CD019AB17F9302E00435B2E /* TPKeyboardAvoidingTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TPKeyboardAvoidingTableView.h; path = TPKeyboardAvoiding/TPKeyboardAvoidingTableView.h; sourceTree = SOURCE_ROOT; };
+		4CD019AC17F9302E00435B2E /* TPKeyboardAvoidingTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TPKeyboardAvoidingTableView.m; path = TPKeyboardAvoiding/TPKeyboardAvoidingTableView.m; sourceTree = SOURCE_ROOT; };
+		4CD019AD17F9302E00435B2E /* UIScrollView+TPKeyboardAvoidingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIScrollView+TPKeyboardAvoidingAdditions.h"; path = "TPKeyboardAvoiding/UIScrollView+TPKeyboardAvoidingAdditions.h"; sourceTree = SOURCE_ROOT; };
+		4CD019AE17F9302E00435B2E /* UIScrollView+TPKeyboardAvoidingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIScrollView+TPKeyboardAvoidingAdditions.m"; path = "TPKeyboardAvoiding/UIScrollView+TPKeyboardAvoidingAdditions.m"; sourceTree = SOURCE_ROOT; };
+		4CD019B317F9303B00435B2E /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,7 +116,7 @@
 		27FE59C913573CB900AAD959 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				4CD6AB88178D53060019F56A /* Default-568h@2x.png */,
+				4CD019B317F9303B00435B2E /* Default-568h@2x.png */,
 				27FE59CA13573CB900AAD959 /* TPKeyboardAvoidingSample-Info.plist */,
 				27FE59CB13573CB900AAD959 /* InfoPlist.strings */,
 				27FE59CE13573CB900AAD959 /* TPKeyboardAvoidingSample-Prefix.pch */,
@@ -129,14 +129,14 @@
 		4CD019A517F9158100435B2E /* TPKeyboardAvoiding */ = {
 			isa = PBXGroup;
 			children = (
-				4CD019A217F9156700435B2E /* UIScrollView+TPKeyboardAvoidingAdditions.h */,
-				4CD019A317F9156700435B2E /* UIScrollView+TPKeyboardAvoidingAdditions.m */,
-				9094AEB317AD52C6002241F8 /* TPKeyboardAvoidingCollectionView.h */,
-				9094AEB417AD52C6002241F8 /* TPKeyboardAvoidingCollectionView.m */,
-				27FE59F013573CF300AAD959 /* TPKeyboardAvoidingScrollView.h */,
-				27FE59F113573CF300AAD959 /* TPKeyboardAvoidingScrollView.m */,
-				27FE59F213573CF300AAD959 /* TPKeyboardAvoidingTableView.h */,
-				27FE59F313573CF300AAD959 /* TPKeyboardAvoidingTableView.m */,
+				4CD019A717F9302E00435B2E /* TPKeyboardAvoidingCollectionView.h */,
+				4CD019A817F9302E00435B2E /* TPKeyboardAvoidingCollectionView.m */,
+				4CD019A917F9302E00435B2E /* TPKeyboardAvoidingScrollView.h */,
+				4CD019AA17F9302E00435B2E /* TPKeyboardAvoidingScrollView.m */,
+				4CD019AB17F9302E00435B2E /* TPKeyboardAvoidingTableView.h */,
+				4CD019AC17F9302E00435B2E /* TPKeyboardAvoidingTableView.m */,
+				4CD019AD17F9302E00435B2E /* UIScrollView+TPKeyboardAvoidingAdditions.h */,
+				4CD019AE17F9302E00435B2E /* UIScrollView+TPKeyboardAvoidingAdditions.m */,
 			);
 			name = TPKeyboardAvoiding;
 			path = TPKeyboardAvoidingSample;
@@ -196,7 +196,7 @@
 				27FE59D613573CBA00AAD959 /* MainWindow.xib in Resources */,
 				27FE59DF13573CBA00AAD959 /* FirstView.xib in Resources */,
 				27FE59E213573CBA00AAD959 /* SecondView.xib in Resources */,
-				4CD6AB89178D53060019F56A /* Default-568h@2x.png in Resources */,
+				4CD019B417F9303B00435B2E /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,13 +208,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				27FE59D013573CB900AAD959 /* main.m in Sources */,
+				4CD019B217F9302E00435B2E /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
+				4CD019B017F9302E00435B2E /* TPKeyboardAvoidingScrollView.m in Sources */,
+				4CD019AF17F9302E00435B2E /* TPKeyboardAvoidingCollectionView.m in Sources */,
 				27FE59D313573CBA00AAD959 /* TPKeyboardAvoidingSampleAppDelegate.m in Sources */,
-				4CD019A617F91C9A00435B2E /* TPKeyboardAvoidingCollectionView.m in Sources */,
 				27FE59D913573CBA00AAD959 /* FirstViewController.m in Sources */,
-				4CD019A417F9156700435B2E /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				27FE59DC13573CBA00AAD959 /* SecondViewController.m in Sources */,
-				27FE59F413573CF300AAD959 /* TPKeyboardAvoidingScrollView.m in Sources */,
-				27FE59F513573CF300AAD959 /* TPKeyboardAvoidingTableView.m in Sources */,
+				4CD019B117F9302E00435B2E /* TPKeyboardAvoidingTableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
