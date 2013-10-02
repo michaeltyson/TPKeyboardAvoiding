@@ -47,7 +47,7 @@ static const int kStateKey;
     }
     
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
-    state.keyboardRect = [[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    state.keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
     state.keyboardVisible = YES;
     state.priorInset = self.contentInset;
     state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
@@ -68,8 +68,8 @@ static const int kStateKey;
     
     self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
     [self setContentOffset:CGPointMake(self.contentOffset.x,
-                                    [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
-                                                          withViewingAreaHeight:CGRectGetMinY(state.keyboardRect) - CGRectGetMinY([self convertRect:self.bounds toView:nil])])
+                                       [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
+                                                             withViewingAreaHeight:CGRectGetMinY(state.keyboardRect) - CGRectGetMinY([self convertRect:self.bounds toView:self.window.rootViewController.view])])
                   animated:NO];
     self.scrollIndicatorInsets = self.contentInset;
     
@@ -200,8 +200,7 @@ static const int kStateKey;
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     UIEdgeInsets newInset = self.contentInset;
     CGRect keyboardRect = state.keyboardRect;
-    newInset.bottom = keyboardRect.size.height
-                        - (CGRectGetMaxY(keyboardRect) - CGRectGetMaxY([self convertRect:self.bounds toView:nil]));
+    newInset.bottom = keyboardRect.size.height - (CGRectGetMaxY(keyboardRect) - CGRectGetMaxY([self convertRect:self.bounds toView:self.window.rootViewController.view]));
     return newInset;
 }
 
@@ -233,16 +232,6 @@ static const int kStateKey;
     }
     
     return offset;
-}
-
-- (CGRect)TPKeyboardAvoiding_keyboardRect {
-    TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
-    CGRect keyboardRect = [self convertRect:state.keyboardRect fromView:nil];
-    if ( keyboardRect.origin.y == 0 ) {
-        CGRect screenBounds = [self convertRect:[UIScreen mainScreen].bounds fromView:nil];
-        keyboardRect.origin = CGPointMake(0, screenBounds.size.height - keyboardRect.size.height);
-    }
-    return keyboardRect;
 }
 
 - (void)TPKeyboardAvoiding_initializeView:(UIView*)view {
