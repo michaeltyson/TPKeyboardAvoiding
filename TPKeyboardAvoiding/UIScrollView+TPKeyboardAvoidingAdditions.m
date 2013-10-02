@@ -47,7 +47,7 @@ static const int kStateKey;
     }
     
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
-    state.keyboardRect = [self.window.rootViewController.view convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    state.keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
     state.keyboardVisible = YES;
     state.priorInset = self.contentInset;
     state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
@@ -69,7 +69,7 @@ static const int kStateKey;
     self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
     [self setContentOffset:CGPointMake(self.contentOffset.x,
                                        [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
-                                                             withViewingAreaHeight:CGRectGetMinY(state.keyboardRect) - CGRectGetMinY([self convertRect:self.bounds toView:self.window.rootViewController.view])])
+                                                             withViewingAreaHeight:CGRectGetMinY(state.keyboardRect) - CGRectGetMinY(self.bounds)])
                   animated:NO];
     self.scrollIndicatorInsets = self.contentInset;
     
@@ -200,7 +200,7 @@ static const int kStateKey;
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     UIEdgeInsets newInset = self.contentInset;
     CGRect keyboardRect = state.keyboardRect;
-    newInset.bottom = keyboardRect.size.height - (CGRectGetMaxY(keyboardRect) - CGRectGetMaxY([self convertRect:self.bounds toView:self.window.rootViewController.view]));
+    newInset.bottom = keyboardRect.size.height - (CGRectGetMaxY(keyboardRect) - CGRectGetMaxY(self.bounds));
     return newInset;
 }
 
