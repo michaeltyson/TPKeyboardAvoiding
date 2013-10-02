@@ -47,7 +47,7 @@ static const int kStateKey;
     }
     
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
-    state.keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    state.keyboardRect = [self.window.rootViewController.view convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
     state.keyboardVisible = YES;
     state.priorInset = self.contentInset;
     state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
