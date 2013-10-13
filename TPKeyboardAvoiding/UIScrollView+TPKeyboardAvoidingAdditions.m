@@ -238,7 +238,7 @@ static const int kStateKey;
     if ( ([view isKindOfClass:[UITextField class]] || [view isKindOfClass:[UITextView class]]) && (![(id)view delegate] || [(id)view delegate] == self) ) {
         [(id)view setDelegate:self];
         
-        if ( [view isKindOfClass:[UITextField class]] ) {
+        if ( [view isKindOfClass:[UITextField class]] && ((UITextField*)view).returnKeyType == UIReturnKeyDefault ) {
             UIView *otherView = nil;
             CGFloat minY = CGFLOAT_MAX;
             [self TPKeyboardAvoiding_findTextFieldAfterTextField:view beneathView:self minY:&minY foundView:&otherView];
