@@ -211,15 +211,11 @@ static const int kStateKey;
     
     CGFloat offset;
 
-    NSLog(@"height: %.2f, OriginY:%.2f    viewAreaHeight:%.2f",self.contentSize.height,rect.origin.y,viewAreaHeight);
     if ( self.contentSize.height - rect.origin.y < viewAreaHeight ) {
-        NSLog(@"Getting HEre1");
         // Scroll to the bottom
         int viewBottom = view.frame.origin.y + view.frame.size.height*2;
         offset = viewBottom - viewAreaHeight;
-//        offset -= 64;
     } else {
-        NSLog(@"Getting HEre2");
         offset = CGRectGetMinY(rect);
         
         if ( view.bounds.size.height < viewAreaHeight ) {
