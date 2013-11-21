@@ -82,8 +82,7 @@
 
 -(void)layoutSubviews {
     [super layoutSubviews];
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(TPKeyboardAvoiding_assignTextDelegateForViewsBeneathView:) object:self];
-    [self performSelector:@selector(TPKeyboardAvoiding_assignTextDelegateForViewsBeneathView:) withObject:self afterDelay:0.1];
+    [self TPKeyboardAvoiding_assignTextDelegateForViewsBeneathView:self];
 }
 
 @end

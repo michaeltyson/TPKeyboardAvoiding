@@ -65,7 +65,6 @@ static const int kStateKey;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
-    
     self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
     [self setContentOffset:CGPointMake(self.contentOffset.x,
                                        [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
@@ -95,8 +94,9 @@ static const int kStateKey;
         self.contentSize = state.priorContentSize;
     }
     
-    self.contentInset = state.priorInset;
-    self.scrollIndicatorInsets = state.priorScrollIndicatorInsets;
+//    self.contentInset = state.priorInset;
+    self.contentOffset = CGPointMake(0.0, 0.0);
+//    self.scrollIndicatorInsets = state.priorScrollIndicatorInsets;
     [UIView commitAnimations];
 }
 
@@ -210,10 +210,11 @@ static const int kStateKey;
     CGRect rect = CGRectInset([view convertRect:view.bounds toView:self], 0, -kMinimumScrollOffsetPadding);
     
     CGFloat offset;
-    
+
     if ( self.contentSize.height - rect.origin.y < viewAreaHeight ) {
         // Scroll to the bottom
-        offset = self.contentSize.height - viewAreaHeight;
+        int viewBottom = view.frame.origin.y + view.frame.size.height*2;
+        offset = viewBottom - viewAreaHeight;
     } else {
         offset = CGRectGetMinY(rect);
         
@@ -238,7 +239,7 @@ static const int kStateKey;
     if ( ([view isKindOfClass:[UITextField class]] || [view isKindOfClass:[UITextView class]]) && (![(id)view delegate] || [(id)view delegate] == self) ) {
         [(id)view setDelegate:self];
         
-        if ( [view isKindOfClass:[UITextField class]] && ((UITextField*)view).returnKeyType == UIReturnKeyDefault ) {
+        if ( [view isKindOfClass:[UITextField class]] ) {
             UIView *otherView = nil;
             CGFloat minY = CGFLOAT_MAX;
             [self TPKeyboardAvoiding_findTextFieldAfterTextField:view beneathView:self minY:&minY foundView:&otherView];
