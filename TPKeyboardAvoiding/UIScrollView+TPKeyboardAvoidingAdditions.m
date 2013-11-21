@@ -66,11 +66,12 @@ static const int kStateKey;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
-    
+
     self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
+    CGFloat viewableHeight = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
     [self setContentOffset:CGPointMake(self.contentOffset.x,
                                        [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
-                                                             withViewingAreaHeight:CGRectGetMinY(state.keyboardRect) - CGRectGetMinY(self.bounds)])
+                                                             withViewingAreaHeight:viewableHeight])
                   animated:NO];
     self.scrollIndicatorInsets = self.contentInset;
     
@@ -145,8 +146,12 @@ static const int kStateKey;
     
     CGPoint idealOffset = CGPointMake(0, [self TPKeyboardAvoiding_idealOffsetForView:[self TPKeyboardAvoiding_findFirstResponderBeneathView:self]
                                                                withViewingAreaHeight:visibleSpace]);
-    
-    [self setContentOffset:idealOffset animated:YES];
+
+    // Ordinarily we'd use -setContentOffset:animated:YES here, but it does not appear to
+    // scroll to the desired content offset. So we wrap in our own animation block.
+    [UIView animateWithDuration:0.25 animations:^{
+        [self setContentOffset:idealOffset animated:NO];
+    }];
 }
 
 #pragma mark - Helpers
@@ -206,32 +211,33 @@ static const int kStateKey;
 }
 
 -(CGFloat)TPKeyboardAvoiding_idealOffsetForView:(UIView *)view withViewingAreaHeight:(CGFloat)viewAreaHeight {
-    
-    // Convert the rect to get the view's distance from the top of the scrollView.
-    CGRect rect = CGRectInset([view convertRect:view.bounds toView:self], 0, -kMinimumScrollOffsetPadding);
-    
-    CGFloat offset;
-    
-    if ( self.contentSize.height - rect.origin.y < viewAreaHeight ) {
-        // Scroll to the bottom
-        offset = self.contentSize.height - viewAreaHeight;
-    } else {
-        offset = CGRectGetMinY(rect);
-        
-        if ( view.bounds.size.height < viewAreaHeight ) {
-            // Center vertically if there's room
-            offset = CGRectGetMinY(rect) - floor((viewAreaHeight-rect.size.height)/2.0);
-        }
-        if ( rect.origin.y + viewAreaHeight > self.contentSize.height ) {
-            // Clamp to content size
-            offset = self.contentSize.height - viewAreaHeight;
-        }
+    CGSize contentSize = self.contentSize;
+    CGFloat offset = 0.0;
+
+    CGRect subviewRect = [view convertRect:view.bounds toView:self];
+
+    // attempt to center the subview in the visible space, but if that means there will be less than kMinimumScrollOffsetPadding
+    // pixels above the view, then substitute kMinimumScrollOffsetPadding
+    CGFloat padding = (viewAreaHeight - subviewRect.size.height) / 2;
+    if ( padding < kMinimumScrollOffsetPadding ) {
+        padding = kMinimumScrollOffsetPadding;
     }
-    
-    if ( offset < 0 ) {
-        offset = 0;
+
+    // Ideal offset places the subview rectangle origin "padding" points from the top of the scrollview.
+    // If there is a top contentInset, also compensate for this so that subviewRect will not be placed under
+    // things like navigation bars.
+    offset = subviewRect.origin.y - padding - self.contentInset.top;
+
+    // constrain the new contentOffset so we can't scroll either past the bottom
+    if ( offset > (contentSize.height + self.contentInset.bottom - viewAreaHeight) ) {
+        offset = contentSize.height + self.contentInset.bottom - viewAreaHeight;
     }
-    
+
+    // constrain the new contentOffset so we can't scroll either past the top, taking contentInsets into account
+    if ( offset < -self.contentInset.top ) {
+        offset = -self.contentInset.top;
+    }
+
     return offset;
 }
 
