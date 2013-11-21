@@ -99,7 +99,6 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
         
         UITextField *textField = [[[UITextField alloc] initWithFrame:CGRectMake(0, 0, 150, 30)] autorelease];
-        textField.returnKeyType = UIReturnKeyDone;
         textField.borderStyle = UITextBorderStyleRoundedRect;
         cell.accessoryView = textField;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
