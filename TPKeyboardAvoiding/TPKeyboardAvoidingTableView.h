@@ -8,7 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "UIScrollView+TPKeyboardAvoidingAdditions.h"
 
-@interface TPKeyboardAvoidingTableView : UITableView
+@interface TPKeyboardAvoidingTableView : UITableView <UITextFieldDelegate, UITextViewDelegate>
 - (BOOL)focusNextTextField;
 - (void)scrollToActiveTextField;
 @end
