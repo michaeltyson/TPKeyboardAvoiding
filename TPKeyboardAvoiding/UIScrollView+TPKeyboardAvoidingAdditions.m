@@ -47,8 +47,9 @@ static const int kStateKey;
     }
     
     UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
-    if ( !firstResponder ) {
-        // No child view is the first responder - nothing to do here
+    TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
+    if ( !firstResponder || state.keyboardVisible ) {
+        // No child view is the first responder or keyboard was already visible - nothing to do here
         return;
     }
     
