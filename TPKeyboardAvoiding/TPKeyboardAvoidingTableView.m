@@ -6,15 +6,21 @@
 //
 
 #import "TPKeyboardAvoidingTableView.h"
+#import "TPKeyboardAvoidingProxy.h"
 
 @interface TPKeyboardAvoidingTableView () <UITextFieldDelegate, UITextViewDelegate>
 @end
 
 @implementation TPKeyboardAvoidingTableView
+{
+    TPKeyboardAvoidingProxy *_proxy;
+}
 
 #pragma mark - Setup/Teardown
 
 - (void)setup {
+    _proxy = [TPKeyboardAvoidingProxy proxyWithParent:self];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TPKeyboardAvoiding_keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TPKeyboardAvoiding_keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
@@ -84,8 +90,7 @@
 
 -(void)layoutSubviews {
     [super layoutSubviews];
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(TPKeyboardAvoiding_assignTextDelegateForViewsBeneathView:) object:self];
-    [self performSelector:@selector(TPKeyboardAvoiding_assignTextDelegateForViewsBeneathView:) withObject:self afterDelay:0.1];
+    [_proxy delayedAssignTextDelegateForViews];
 }
 
 @end
