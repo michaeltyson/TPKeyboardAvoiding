@@ -40,13 +40,18 @@ static const int kStateKey;
 }
 
 - (void)TPKeyboardAvoiding_keyboardWillShow:(NSNotification*)notification {
+    TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
+    
+    if ( state.keyboardVisible ) {
+        return;
+    }
+    
     UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
     if ( !firstResponder ) {
         // No child view is the first responder - nothing to do here
         return;
     }
     
-    TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     state.keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
     state.keyboardVisible = YES;
     state.priorInset = self.contentInset;
