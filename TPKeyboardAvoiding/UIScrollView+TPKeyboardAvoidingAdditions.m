@@ -48,19 +48,43 @@ static const int kStateKey;
     
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     state.keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
-    state.keyboardVisible = YES;
-    state.priorInset = self.contentInset;
-    state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
     
-    if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
-        state.priorContentSize = self.contentSize;
+    
+    
+    // change by 623637646
+    
+    //state.keyboardVisible = YES;
+    //state.priorInset = self.contentInset;
+    //state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
+    
+    //if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
+    //    state.priorContentSize = self.contentSize;
         
+    //    if ( self.constraints.count == 0 && CGSizeEqualToSize(self.contentSize, CGSizeZero) ) {
+    //        // Set the content size, if it's not set. Do not set content size explicitly if auto-layout
+    //        // is being used to manage subviews
+    //        self.contentSize = [self TPKeyboardAvoiding_calculatedContentSizeFromSubviewFrames];
+    //    }
+    //}
+    
+    if (!state.keyboardVisible) {
+        state.priorInset = self.contentInset;
+        state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
+    }
+    if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
+        if (!state.keyboardVisible) {
+            state.priorContentSize = self.contentSize;
+        }
         if ( self.constraints.count == 0 && CGSizeEqualToSize(self.contentSize, CGSizeZero) ) {
             // Set the content size, if it's not set. Do not set content size explicitly if auto-layout
             // is being used to manage subviews
             self.contentSize = [self TPKeyboardAvoiding_calculatedContentSizeFromSubviewFrames];
         }
     }
+    state.keyboardVisible = YES;
+    // end change
+    
+    
     
     // Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
     [UIView beginAnimations:nil context:NULL];
