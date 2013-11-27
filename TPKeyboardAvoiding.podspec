@@ -1,15 +1,7 @@
 Pod::Spec.new do |s|
   s.name     = 'TPKeyboardAvoiding'
   s.version  = '1.2.1'
-  s.license  = {
-    :type => 'Custom permissive license',
-    :text => <<-LICENSE
-  Free for commercial use and redistribution in any form. Credit is appreciated but not essential. Oh, and there aint no warranty!
-
-	Michael Tyson, A Tasty Pixel  
-	michael@atastypixel.com
-    LICENSE
-  }
+  s.license  = 'zlib'
   s.platform = :ios
   s.summary  = 'A drop-in universal solution for moving text fields out of the way of the keyboard in iOS.'
   s.homepage = 'https://github.com/michaeltyson/TPKeyboardAvoiding'
