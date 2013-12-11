@@ -178,7 +178,11 @@ static const int kStateKey;
         if ( childView.hidden ) continue;
         if ( ([childView isKindOfClass:[UITextField class]] || [childView isKindOfClass:[UITextView class]]) ) {
             CGRect frame = [self convertRect:childView.frame fromView:view];
-            if ( childView != priorTextField && CGRectGetMinY(frame) >= priorFieldOffset && CGRectGetMinY(frame) < *minY ) {
+            if ( childView != priorTextField
+                    && CGRectGetMinY(frame) >= priorFieldOffset
+                    && CGRectGetMinY(frame) < *minY &&
+                    !(frame.origin.y == priorTextField.frame.origin.y
+                      && frame.origin.x < priorTextField.frame.origin.x) ) {
                 *minY = CGRectGetMinY(frame);
                 *foundView = childView;
             }
