@@ -47,10 +47,6 @@ static const int kStateKey;
     }
     
     UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
-    if ( !firstResponder ) {
-        // No child view is the first responder - nothing to do here
-        return;
-    }
     
     state.keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
     state.keyboardVisible = YES;
@@ -71,13 +67,17 @@ static const int kStateKey;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
-
+    
     self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
-    CGFloat viewableHeight = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
-    [self setContentOffset:CGPointMake(self.contentOffset.x,
-                                       [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
-                                                             withViewingAreaHeight:viewableHeight])
-                  animated:NO];
+    
+    if ( firstResponder ) {
+        CGFloat viewableHeight = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
+        [self setContentOffset:CGPointMake(self.contentOffset.x,
+                                           [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
+                                                                 withViewingAreaHeight:viewableHeight])
+                      animated:NO];
+    }
+    
     self.scrollIndicatorInsets = self.contentInset;
     
     [UIView commitAnimations];
