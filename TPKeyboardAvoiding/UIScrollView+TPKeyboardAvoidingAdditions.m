@@ -60,7 +60,7 @@ static const int kStateKey;
     if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
         state.priorContentSize = self.contentSize;
         
-        if ( [self respondsToSelector:@selector(constraints)] && self.constraints.count == 0 && CGSizeEqualToSize(self.contentSize, CGSizeZero) ) {
+        if ( ![self respondsToSelector:@selector(constraints)] || (self.constraints.count == 0 && CGSizeEqualToSize(self.contentSize, CGSizeZero)) ) {
             // Set the content size, if it's not set. Do not set content size explicitly if auto-layout
             // is being used to manage subviews
             self.contentSize = [self TPKeyboardAvoiding_calculatedContentSizeFromSubviewFrames];
