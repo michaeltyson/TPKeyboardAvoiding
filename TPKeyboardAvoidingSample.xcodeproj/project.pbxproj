@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A4D0D14187AA2C300DED1D2 /* ThirdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A4D0D13187AA2C300DED1D2 /* ThirdViewController.m */; };
+		1A4D0D16187AA2E000DED1D2 /* ThirdCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A4D0D15187AA2E000DED1D2 /* ThirdCollectionViewCell.xib */; };
+		1A4D0D18187AA47700DED1D2 /* ThirdCollectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A4D0D17187AA47700DED1D2 /* ThirdCollectionView.xib */; };
 		27FE59C313573CB900AAD959 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27FE59C213573CB900AAD959 /* UIKit.framework */; };
 		27FE59C513573CB900AAD959 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27FE59C413573CB900AAD959 /* Foundation.framework */; };
 		27FE59C713573CB900AAD959 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27FE59C613573CB900AAD959 /* CoreGraphics.framework */; };
@@ -26,6 +29,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A4D0D12187AA2C300DED1D2 /* ThirdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThirdViewController.h; sourceTree = "<group>"; };
+		1A4D0D13187AA2C300DED1D2 /* ThirdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThirdViewController.m; sourceTree = "<group>"; };
+		1A4D0D15187AA2E000DED1D2 /* ThirdCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ThirdCollectionViewCell.xib; sourceTree = "<group>"; };
+		1A4D0D17187AA47700DED1D2 /* ThirdCollectionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ThirdCollectionView.xib; sourceTree = "<group>"; };
 		27FE59BE13573CB900AAD959 /* TPKeyboardAvoidingSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TPKeyboardAvoidingSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27FE59C213573CB900AAD959 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		27FE59C413573CB900AAD959 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -107,6 +114,10 @@
 				27FE59E013573CBA00AAD959 /* SecondView.xib */,
 				27FE59DA13573CBA00AAD959 /* SecondViewController.h */,
 				27FE59DB13573CBA00AAD959 /* SecondViewController.m */,
+				1A4D0D12187AA2C300DED1D2 /* ThirdViewController.h */,
+				1A4D0D13187AA2C300DED1D2 /* ThirdViewController.m */,
+				1A4D0D17187AA47700DED1D2 /* ThirdCollectionView.xib */,
+				1A4D0D15187AA2E000DED1D2 /* ThirdCollectionViewCell.xib */,
 				27FE59D113573CB900AAD959 /* TPKeyboardAvoidingSampleAppDelegate.h */,
 				27FE59D213573CBA00AAD959 /* TPKeyboardAvoidingSampleAppDelegate.m */,
 			);
@@ -192,6 +203,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A4D0D18187AA47700DED1D2 /* ThirdCollectionView.xib in Resources */,
+				1A4D0D16187AA2E000DED1D2 /* ThirdCollectionViewCell.xib in Resources */,
 				27FE59CD13573CB900AAD959 /* InfoPlist.strings in Resources */,
 				27FE59D613573CBA00AAD959 /* MainWindow.xib in Resources */,
 				27FE59DF13573CBA00AAD959 /* FirstView.xib in Resources */,
@@ -212,6 +225,7 @@
 				4CD019B017F9302E00435B2E /* TPKeyboardAvoidingScrollView.m in Sources */,
 				4CD019AF17F9302E00435B2E /* TPKeyboardAvoidingCollectionView.m in Sources */,
 				27FE59D313573CBA00AAD959 /* TPKeyboardAvoidingSampleAppDelegate.m in Sources */,
+				1A4D0D14187AA2C300DED1D2 /* ThirdViewController.m in Sources */,
 				27FE59D913573CBA00AAD959 /* FirstViewController.m in Sources */,
 				27FE59DC13573CBA00AAD959 /* SecondViewController.m in Sources */,
 				4CD019B117F9302E00435B2E /* TPKeyboardAvoidingTableView.m in Sources */,
