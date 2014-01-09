@@ -48,6 +48,11 @@
 }
 
 -(void)setContentSize:(CGSize)contentSize {
+    if (CGSizeEqualToSize(contentSize, self.contentSize)) {
+        // Prevent triggering contentSize when it's already the same that
+        // cause weird infinte scrolling and locking bug
+        return;
+    }
     [super setContentSize:contentSize];
     [self TPKeyboardAvoiding_updateContentInset];
 }
