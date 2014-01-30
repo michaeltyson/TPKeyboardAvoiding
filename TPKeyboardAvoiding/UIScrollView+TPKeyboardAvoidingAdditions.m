@@ -203,13 +203,25 @@ static const int kStateKey;
 }
 
 -(CGSize)TPKeyboardAvoiding_calculatedContentSizeFromSubviewFrames {
+    
+    BOOL wasShowingVerticalScrollIndicator = self.showsVerticalScrollIndicator;
+    BOOL wasShowingHorizontalScrollIndicator = self.showsHorizontalScrollIndicator;
+    
+    self.showsVerticalScrollIndicator = NO;
+    self.showsHorizontalScrollIndicator = NO;
+    
     CGRect rect = CGRectZero;
     for ( UIView *view in self.subviews ) {
         rect = CGRectUnion(rect, view.frame);
     }
     rect.size.height += kCalculatedContentPadding;
+    
+    self.showsVerticalScrollIndicator = wasShowingVerticalScrollIndicator;
+    self.showsHorizontalScrollIndicator = wasShowingHorizontalScrollIndicator;
+    
     return rect.size;
 }
+
 
 - (UIEdgeInsets)TPKeyboardAvoiding_contentInsetForKeyboard {
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
