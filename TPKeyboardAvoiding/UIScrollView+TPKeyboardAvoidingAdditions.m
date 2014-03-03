@@ -136,7 +136,7 @@ static const int kStateKey;
     
     if ( view ) {
         [firstResponder resignFirstResponder];
-        [view becomeFirstResponder];
+        [view performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.0];
         return YES;
     }
     
