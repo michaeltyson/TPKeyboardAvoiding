@@ -28,6 +28,8 @@ For use with `UITableViewController` classes, drop `TPKeyboardAvoidingTableView.
 
 For non-UITableViewControllers, drop the `TPKeyboardAvoidingScrollView.m` and `TPKeyboardAvoidingScrollView.h` source files into your project, pop a `UIScrollView` into your view controller's xib, set the scroll view's class to `TPKeyboardAvoidingScrollView`, and put all your controls within that scroll view.  You can also create it programmatically, without using a xib - just use the TPKeyboardAvoidingScrollView as your top-level view.
 
+To disable the automatic "Next" button functionality, change the UITextField's return key type to anything but UIReturnKeyDefault.
+
 Notes
 -----
 
