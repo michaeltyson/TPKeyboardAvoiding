@@ -10,6 +10,8 @@
 
 @interface TPKeyboardAvoidingCollectionView : UICollectionView <UITextFieldDelegate, UITextViewDelegate>
 
+@property (assign, nonatomic) CGFloat contentPadding;
+
 - (BOOL)focusNextTextField;
 - (void)scrollToActiveTextField;
 

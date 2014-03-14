@@ -10,7 +10,7 @@
 #import <objc/runtime.h>
 
 static const CGFloat kMinimumScrollOffsetPadding = 20;
-
+static const CGFloat kDefaultContentPadding = 10;
 static const int kStateKey;
 
 #define _UIKeyboardFrameEndUserInfoKey (&UIKeyboardFrameEndUserInfoKey != NULL ? UIKeyboardFrameEndUserInfoKey : @"UIKeyboardBoundsUserInfoKey")
@@ -25,7 +25,7 @@ static const int kStateKey;
 
 @end
 
-@implementation TPKeyboardAvoidingScrollView (TPKeyboardAvoidingAdditions)
+@implementation UIScrollView (TPKeyboardAvoidingAdditions)
 
 - (TPKeyboardAvoidingState*)keyboardAvoidingState {
     TPKeyboardAvoidingState *state = objc_getAssociatedObject(self, &kStateKey);
@@ -232,7 +232,11 @@ static const int kStateKey;
     for (UIView *view in self.subviews)
         rect = CGRectUnion(rect, view.frame);
     
-    rect.size.height += self.contentPadding;
+    CGFloat contentPadding = kDefaultContentPadding;
+    if ([self respondsToSelector:@selector(contentPadding)])
+        contentPadding = [[self performSelector:@selector(contentPadding) withObject:nil] floatValue];
+        
+    rect.size.height += contentPadding;
     
     self.showsVerticalScrollIndicator = wasShowingVerticalScrollIndicator;
     self.showsHorizontalScrollIndicator = wasShowingHorizontalScrollIndicator;

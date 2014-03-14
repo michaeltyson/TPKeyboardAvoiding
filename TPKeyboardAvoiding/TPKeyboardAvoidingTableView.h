@@ -9,6 +9,9 @@
 #import "UIScrollView+TPKeyboardAvoidingAdditions.h"
 
 @interface TPKeyboardAvoidingTableView : UITableView <UITextFieldDelegate, UITextViewDelegate>
+
+@property (assign, nonatomic) CGFloat contentPadding;
+
 - (BOOL)focusNextTextField;
 - (void)scrollToActiveTextField;
 @end
