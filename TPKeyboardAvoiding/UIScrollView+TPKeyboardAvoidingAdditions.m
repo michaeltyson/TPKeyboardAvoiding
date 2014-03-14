@@ -247,7 +247,12 @@ static const int kStateKey;
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     UIEdgeInsets newInset = self.contentInset;
     CGRect keyboardRect = state.keyboardRect;
-    newInset.bottom = keyboardRect.size.height - (CGRectGetMaxY(keyboardRect) - CGRectGetMaxY(self.bounds));
+    NSLog(@"keyboard rect: %@", NSStringFromCGRect(keyboardRect));
+    NSLog(@"bounds rect: %@", NSStringFromCGRect(self.frame));
+    CGFloat idk = (CGRectGetMaxY(keyboardRect) - CGRectGetMaxY(self.frame));
+    NSLog(@"%f = %f - %f", idk, CGRectGetMaxY(keyboardRect), CGRectGetMaxY(self.frame));
+    newInset.bottom = CGRectGetHeight(keyboardRect) - idk;
+    NSLog(@"newInset: %f = %f - %f", newInset.bottom, CGRectGetHeight(keyboardRect), idk);
     return newInset;
 }
 
