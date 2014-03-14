@@ -211,7 +211,7 @@ static const int kStateKey;
     }
 }
 
--(CGSize)TPKeyboardAvoiding_calculatedContentSizeFromSubviewFrames {
+- (CGSize)TPKeyboardAvoiding_calculatedContentSizeFromSubviewFrames {
     
     BOOL wasShowingVerticalScrollIndicator = self.showsVerticalScrollIndicator;
     BOOL wasShowingHorizontalScrollIndicator = self.showsHorizontalScrollIndicator;
