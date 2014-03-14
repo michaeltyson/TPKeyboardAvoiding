@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface UIScrollView (TPKeyboardAvoidingAdditions)
+@interface UIScrollView (TPKeyboardAvoidingAdditions) <UITextFieldDelegate>
 - (BOOL)TPKeyboardAvoiding_focusNextTextField;
 - (void)TPKeyboardAvoiding_scrollToActiveTextField;
 

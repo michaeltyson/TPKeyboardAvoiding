@@ -47,8 +47,11 @@ static const int kStateKey;
     }
     
     UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
+    bool noChildrenWithFocus = !firstResponder;
+    if (noChildrenWithFocus)
+        return;
     
-    state.keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    state.keyboardRect = [self.superview convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
     state.keyboardVisible = YES;
     state.priorInset = self.contentInset;
     state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
@@ -175,15 +178,20 @@ static const int kStateKey;
 - (void)TPKeyboardAvoiding_findTextFieldAfterTextField:(UIView*)priorTextField beneathView:(UIView*)view minY:(CGFloat*)minY foundView:(UIView**)foundView {
     // Search recursively for text field or text view below priorTextField
     CGFloat priorFieldOffset = CGRectGetMinY([self convertRect:priorTextField.frame fromView:priorTextField.superview]);
+    CGFloat priorFieldOffX = CGRectGetMinX([self convertRect:priorTextField.frame fromView:priorTextField.superview]);
     for ( UIView *childView in view.subviews ) {
         if ( childView.hidden ) continue;
         if ( ([childView isKindOfClass:[UITextField class]] || [childView isKindOfClass:[UITextView class]]) ) {
             CGRect frame = [self convertRect:childView.frame fromView:view];
-            if ( childView != priorTextField
-                    && CGRectGetMinY(frame) >= priorFieldOffset
-                    && CGRectGetMinY(frame) < *minY &&
-                    !(frame.origin.y == priorTextField.frame.origin.y
-                      && frame.origin.x < priorTextField.frame.origin.x) ) {
+            bool notPriorTextField = (childView != priorTextField);
+            bool equalOrGreaterThanPriorOffset = CGRectGetMinY(frame) >= priorFieldOffset;
+            bool lessThanFoundY = CGRectGetMinY(frame) < *minY;
+            bool xIsLessThanPriorX = (frame.origin.y == priorFieldOffset
+                            && frame.origin.x < priorFieldOffX);
+            if ( notPriorTextField
+                    && equalOrGreaterThanPriorOffset
+                    && lessThanFoundY &&
+                    !xIsLessThanPriorX ) {
                 *minY = CGRectGetMinY(frame);
                 *foundView = childView;
             }
@@ -265,18 +273,29 @@ static const int kStateKey;
 }
 
 - (void)TPKeyboardAvoiding_initializeView:(UIView*)view {
-    if ( [view isKindOfClass:[UITextField class]] && ((UITextField*)view).returnKeyType == UIReturnKeyDefault && (![(id)view delegate] || [(id)view delegate] == self) ) {
-        [(id)view setDelegate:self];
-        UIView *otherView = nil;
-        CGFloat minY = CGFLOAT_MAX;
-        [self TPKeyboardAvoiding_findTextFieldAfterTextField:view beneathView:self minY:&minY foundView:&otherView];
-        
-        if ( otherView ) {
-            ((UITextField*)view).returnKeyType = UIReturnKeyNext;
-        } else {
-            ((UITextField*)view).returnKeyType = UIReturnKeyDone;
-        }
-    }
+    bool viewIsTextField            = [view isKindOfClass:[UITextField class]];
+    bool viewHasDefaultReturnKey    = ((UITextField*)view).returnKeyType == UIReturnKeyDefault;
+    
+    if (!viewIsTextField)
+        return;
+    if (!viewHasDefaultReturnKey)
+        return;
+    
+    UITextField* textField = (UITextField*)view;
+    bool viewDelegateIsNotSet   = textField.delegate == nil;
+    bool viewDelegateIsSelf     = textField.delegate == self;
+    if (!viewDelegateIsNotSet && !viewDelegateIsSelf)
+        return;
+    
+    [(id)view setDelegate:self];
+    UIView *otherView = nil;
+    CGFloat minY = CGFLOAT_MAX;
+    [self TPKeyboardAvoiding_findTextFieldAfterTextField:view beneathView:self minY:&minY foundView:&otherView];
+    
+    if (otherView)
+        ((UITextField*)view).returnKeyType = UIReturnKeyNext;
+    else
+        ((UITextField*)view).returnKeyType = UIReturnKeyDone;
 }
 
 @end
