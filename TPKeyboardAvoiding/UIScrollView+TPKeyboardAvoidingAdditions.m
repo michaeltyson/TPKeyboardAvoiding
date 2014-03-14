@@ -234,8 +234,11 @@ static const int kStateKey;
     
     CGFloat contentPadding = kDefaultContentPadding;
     if ([self respondsToSelector:@selector(contentPadding)])
-        contentPadding = [[self performSelector:@selector(contentPadding) withObject:nil] floatValue];
-        
+    {
+        NSNumber* contentPadNum = [self valueForKey:@"contentPadding"];
+        contentPadding = [contentPadNum floatValue];
+    }
+    
     rect.size.height += contentPadding;
     
     self.showsVerticalScrollIndicator = wasShowingVerticalScrollIndicator;
