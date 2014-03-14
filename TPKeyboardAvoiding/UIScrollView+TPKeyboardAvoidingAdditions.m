@@ -7,10 +7,8 @@
 //
 
 #import "UIScrollView+TPKeyboardAvoidingAdditions.h"
-#import "TPKeyboardAvoidingScrollView.h"
 #import <objc/runtime.h>
 
-static const CGFloat kCalculatedContentPadding = 10;
 static const CGFloat kMinimumScrollOffsetPadding = 20;
 
 static const int kStateKey;
@@ -27,7 +25,7 @@ static const int kStateKey;
 
 @end
 
-@implementation UIScrollView (TPKeyboardAvoidingAdditions)
+@implementation TPKeyboardAvoidingScrollView (TPKeyboardAvoidingAdditions)
 
 - (TPKeyboardAvoidingState*)keyboardAvoidingState {
     TPKeyboardAvoidingState *state = objc_getAssociatedObject(self, &kStateKey);
@@ -234,7 +232,7 @@ static const int kStateKey;
     for (UIView *view in self.subviews)
         rect = CGRectUnion(rect, view.frame);
     
-    rect.size.height += kCalculatedContentPadding;
+    rect.size.height += self.contentPadding;
     
     self.showsVerticalScrollIndicator = wasShowingVerticalScrollIndicator;
     self.showsHorizontalScrollIndicator = wasShowingHorizontalScrollIndicator;

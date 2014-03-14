@@ -6,9 +6,9 @@
 //  Copyright 2013 A Tasty Pixel. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "TPKeyboardAvoidingScrollView.h"
 
-@interface UIScrollView (TPKeyboardAvoidingAdditions) <UITextFieldDelegate>
+@interface TPKeyboardAvoidingScrollView (TPKeyboardAvoidingAdditions) <UITextFieldDelegate>
 
 - (BOOL)TPKeyboardAvoiding_focusNextTextField;
 - (void)TPKeyboardAvoiding_scrollToActiveTextField;

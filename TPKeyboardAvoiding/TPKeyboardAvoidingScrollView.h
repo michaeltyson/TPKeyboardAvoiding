@@ -6,12 +6,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIScrollView+TPKeyboardAvoidingAdditions.h"
 
 @interface TPKeyboardAvoidingScrollView : UIScrollView <UITextFieldDelegate, UITextViewDelegate>
+
+@property (assign, nonatomic) CGFloat contentPadding;
 
 - (void)contentSizeToFit;
 - (BOOL)focusNextTextField;
 - (void)scrollToActiveTextField;
 
 @end
+
+#import "UIScrollView+TPKeyboardAvoidingAdditions.h"
