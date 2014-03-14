@@ -7,7 +7,7 @@
 
 #import "TPKeyboardAvoidingScrollView.h"
 
-static const CGFloat kDefaultContentPadding = 10;
+
 
 @interface TPKeyboardAvoidingScrollView () <UITextFieldDelegate, UITextViewDelegate>
 @end
@@ -17,13 +17,11 @@ static const CGFloat kDefaultContentPadding = 10;
 #pragma mark - Setup/Teardown
 - (id)initWithFrame:(CGRect)frame {
     if ( !(self = [super initWithFrame:frame]) ) return nil;
-    _contentPadding = kDefaultContentPadding; //Using setters breaks KVO
     [self setup];
     return self;
 }
 
 - (void)awakeFromNib {
-    self.contentPadding = kDefaultContentPadding;
     [self setup];
 }
 
