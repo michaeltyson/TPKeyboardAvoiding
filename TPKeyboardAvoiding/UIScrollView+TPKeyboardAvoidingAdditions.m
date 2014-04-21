@@ -135,7 +135,6 @@ static const int kStateKey;
     [self TPKeyboardAvoiding_findTextFieldAfterTextField:firstResponder beneathView:self minY:&minY foundView:&view];
     
     if ( view ) {
-        [firstResponder resignFirstResponder];
         [view performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.0];
         return YES;
     }
@@ -177,7 +176,7 @@ static const int kStateKey;
     CGFloat priorFieldOffset = CGRectGetMinY([self convertRect:priorTextField.frame fromView:priorTextField.superview]);
     for ( UIView *childView in view.subviews ) {
         if ( childView.hidden ) continue;
-        if ( ([childView isKindOfClass:[UITextField class]] || [childView isKindOfClass:[UITextView class]]) ) {
+        if ( ([childView isKindOfClass:[UITextField class]] || [childView isKindOfClass:[UITextView class]]) && childView.isUserInteractionEnabled) {
             CGRect frame = [self convertRect:childView.frame fromView:view];
             if ( childView != priorTextField
                     && CGRectGetMinY(frame) >= priorFieldOffset
