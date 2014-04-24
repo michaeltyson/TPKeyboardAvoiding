@@ -83,6 +83,46 @@ static const int kStateKey;
     [UIView commitAnimations];
 }
 
+- (void)TPKeyboardAvoiding_keyboardWillChangeFrame:(NSNotification *)notification{
+    TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
+    
+    UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
+    
+    state.keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    state.keyboardVisible = YES;
+    state.priorInset = self.contentInset;
+    state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
+    
+    if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
+        state.priorContentSize = self.contentSize;
+        
+        if ( CGSizeEqualToSize(self.contentSize, CGSizeZero) ) {
+            // Set the content size, if it's not set. Do not set content size explicitly if auto-layout
+            // is being used to manage subviews
+            self.contentSize = [self TPKeyboardAvoiding_calculatedContentSizeFromSubviewFrames];
+        }
+    }
+    
+    // Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
+    [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
+    
+    self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
+    
+    if ( firstResponder ) {
+        CGFloat viewableHeight = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
+        [self setContentOffset:CGPointMake(self.contentOffset.x,
+                                           [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
+                                                                 withViewingAreaHeight:viewableHeight])
+                      animated:NO];
+    }
+    
+    self.scrollIndicatorInsets = self.contentInset;
+    
+    [UIView commitAnimations];
+}
+
 - (void)TPKeyboardAvoiding_keyboardWillHide:(NSNotification*)notification {
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     
