@@ -48,7 +48,7 @@ static const int kStateKey;
     
     UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
     
-    state.keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    state.keyboardRect = [[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue];
     state.keyboardVisible = YES;
     state.priorInset = self.contentInset;
     state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
@@ -92,7 +92,7 @@ static const int kStateKey;
     
     UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
     
-    state.keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    state.keyboardRect = [[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue];
     state.keyboardVisible = YES;
    
     if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
@@ -269,7 +269,7 @@ static const int kStateKey;
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     UIEdgeInsets newInset = self.contentInset;
     CGRect keyboardRect = state.keyboardRect;
-    newInset.bottom = keyboardRect.size.height - (CGRectGetMaxY(keyboardRect) - CGRectGetMaxY(self.bounds));
+    newInset.bottom = keyboardRect.size.height - (CGRectGetMaxY(keyboardRect) - CGRectGetMaxY(self.frame));
     return newInset;
 }
 
