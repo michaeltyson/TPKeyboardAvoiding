@@ -111,6 +111,7 @@ static const int kStateKey;
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     if ( state.keyboardVisible ) {
         self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
+        self.scrollIndicatorInsets = self.contentInset;
     }
 }
 
@@ -119,6 +120,7 @@ static const int kStateKey;
     if ( state.keyboardVisible ) {
 		state.priorContentSize = self.contentSize;
         self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
+        self.scrollIndicatorInsets = self.contentInset;
     }
 }
 
@@ -227,7 +229,7 @@ static const int kStateKey;
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     UIEdgeInsets newInset = self.contentInset;
     CGRect keyboardRect = state.keyboardRect;
-    newInset.bottom = keyboardRect.size.height - (CGRectGetMaxY(keyboardRect) - CGRectGetMaxY(self.bounds));
+    newInset.bottom = keyboardRect.size.height - (CGRectGetMaxY(keyboardRect) - CGRectGetMaxY(self.frame));
     return newInset;
 }
 
