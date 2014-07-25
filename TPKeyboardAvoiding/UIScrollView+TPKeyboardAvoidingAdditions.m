@@ -71,17 +71,6 @@ static const int kStateKey;
     
     
     if ( firstResponder ) {
-        if([self isKindOfClass:[TPKeyboardAvoidingScrollView class]]) {
-            TPKeyboardAvoidingScrollView *selfWithCast = (TPKeyboardAvoidingScrollView *)self;
-            if([selfWithCast.keyboardAvoidingDelegate respondsToSelector:@selector(scrollView:shouldAdjustOffsetForFirstResponder:withPreferredContentOffset:)]) {
-                BOOL shouldAdjustContentOffset = [selfWithCast.keyboardAvoidingDelegate scrollView:selfWithCast
-                                                               shouldAdjustOffsetForFirstResponder:firstResponder];
-                if(!shouldAdjustContentOffset) {
-                    return;
-                }
-            }
-        }
-    
         self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
         state.priorContentOffset = self.contentOffset;
         

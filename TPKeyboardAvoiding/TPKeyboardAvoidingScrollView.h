@@ -14,16 +14,6 @@
 
 @optional
 /**
- *  Asks the keyboardAvoidingDelegate whether or not to adjust the scrollView offset for the specific current first responder.
- *
- *  @param scrollView     The TPKeyboardAvoidingScrollView that detected a change in the first responder.
- *  @param firstResponder The view that has just become first responder and is the target for the scroll.
- *
- *  @return YES if the scrollView should adjust its content offset. NO otherwise
- */
-- (BOOL)scrollView:(TPKeyboardAvoidingScrollView *)scrollView shouldAdjustOffsetForFirstResponder:(UIView *)firstResponder;
-
-/**
  *  Asks the delegate for a preferred content offset for a specific first responder. 
  *  Return the suggested offset if you agree with the default behaviour.
  *
