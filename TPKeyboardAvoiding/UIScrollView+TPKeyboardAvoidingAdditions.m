@@ -69,14 +69,36 @@ static const int kStateKey;
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
     
-    self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
     
     if ( firstResponder ) {
+        if([self isKindOfClass:[TPKeyboardAvoidingScrollView class]]) {
+            TPKeyboardAvoidingScrollView *selfWithCast = (TPKeyboardAvoidingScrollView *)self;
+            if([selfWithCast.keyboardAvoidingDelegate respondsToSelector:@selector(scrollView:shouldAdjustOffsetForFirstResponder:withPreferredContentOffset:)]) {
+                BOOL shouldAdjustContentOffset = [selfWithCast.keyboardAvoidingDelegate scrollView:selfWithCast
+                                                               shouldAdjustOffsetForFirstResponder:firstResponder];
+                if(!shouldAdjustContentOffset) {
+                    return;
+                }
+            }
+        }
+    
+        self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
         state.priorContentOffset = self.contentOffset;
+        
         CGFloat viewableHeight = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
-        [self setContentOffset:CGPointMake(self.contentOffset.x,
-                                           [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
-                                                                 withViewingAreaHeight:viewableHeight])
+        CGFloat suggestedYOffset = [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
+                                                         withViewingAreaHeight:viewableHeight];
+        CGPoint newOffset = CGPointMake(self.contentOffset.x, suggestedYOffset);
+        if([self isKindOfClass:[TPKeyboardAvoidingScrollView class]]) {
+            TPKeyboardAvoidingScrollView *selfWithCast = (TPKeyboardAvoidingScrollView *)self;
+            if([selfWithCast.keyboardAvoidingDelegate respondsToSelector:@selector(scrollView:contentOffsetForFirstResponder:suggestedOffset:)]) {
+                newOffset = [selfWithCast.keyboardAvoidingDelegate scrollView:selfWithCast
+                                               contentOffsetForFirstResponder:firstResponder
+                                                              suggestedOffset:newOffset];
+            }
+        }
+        
+        [self setContentOffset:newOffset
                       animated:NO];
     }
     

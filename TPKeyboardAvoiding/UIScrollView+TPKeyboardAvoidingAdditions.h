@@ -18,5 +18,5 @@
 - (void)TPKeyboardAvoiding_updateFromContentSizeChange;
 - (void)TPKeyboardAvoiding_assignTextDelegateForViewsBeneathView:(UIView*)view;
 - (UIView*)TPKeyboardAvoiding_findFirstResponderBeneathView:(UIView*)view;
--(CGSize)TPKeyboardAvoiding_calculatedContentSizeFromSubviewFrames;
+- (CGSize)TPKeyboardAvoiding_calculatedContentSizeFromSubviewFrames;
 @end
