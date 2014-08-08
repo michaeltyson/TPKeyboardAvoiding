@@ -104,8 +104,8 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
-    cell.textLabel.text = [NSString stringWithFormat:@"Order %d", indexPath.row];
-    ((UITextField*)cell.accessoryView).placeholder = [NSString stringWithFormat:@"%d bananas", indexPath.row];
+    cell.textLabel.text = [NSString stringWithFormat:@"Order %d", (int)indexPath.row];
+    ((UITextField*)cell.accessoryView).placeholder = [NSString stringWithFormat:@"%d bananas", (int)indexPath.row];
     
     return cell;
 }
