@@ -61,7 +61,8 @@
 #pragma mark - Responders, events
 
 - (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    [[self TPKeyboardAvoiding_findFirstResponderBeneathView:self] resignFirstResponder];
+    // RB: Not sure why this is here.
+    // [[self TPKeyboardAvoiding_findFirstResponderBeneathView:self] resignFirstResponder];
     [super touchesEnded:touches withEvent:event];
 }
 
