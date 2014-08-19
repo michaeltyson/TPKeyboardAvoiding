@@ -42,13 +42,25 @@ static const int kStateKey;
 - (void)TPKeyboardAvoiding_keyboardWillShow:(NSNotification*)notification {
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     
-    if ( state.keyboardVisible ) {
+    // When keyboard change type ,get the origin.y of keyboard & compare with the former one to decide the contentOffset
+    NSDictionary *userInfo = [notification userInfo];
+    NSValue *value = [userInfo objectForKey:_UIKeyboardFrameEndUserInfoKey];
+    CGFloat keyBoardEndY = value.CGRectValue.origin.y;
+    CGFloat keyBoardEndYOrigin = [[NSUserDefaults standardUserDefaults]floatForKey:@"keyBoardEndY"];
+    
+    if ( state.keyboardVisible && keyBoardEndY == keyBoardEndYOrigin) {
         return;
     }
+    
+    // Save the current origin.y of keyboard
+    [[NSUserDefaults standardUserDefaults]setFloat:keyBoardEndY forKey:@"keyBoardEndY"];
+
     
     UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
     
     state.keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    
+    
     state.keyboardVisible = YES;
     state.priorInset = self.contentInset;
     state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
