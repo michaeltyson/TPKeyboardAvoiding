@@ -17,6 +17,8 @@
 - (void)setup {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TPKeyboardAvoiding_keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TPKeyboardAvoiding_keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToActiveTextField) name:UITextViewTextDidBeginEditingNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToActiveTextField) name:UITextFieldTextDidBeginEditingNotification object:nil];
 }
 
 -(id)initWithFrame:(CGRect)frame {
@@ -100,8 +102,6 @@
 }
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
-    [self scrollToActiveTextField];
-	
 	if(self.textFieldDelegate && [self.textFieldDelegate respondsToSelector:@selector(textFieldDidBeginEditing:)]) {
 		[self.textFieldDelegate textFieldDidBeginEditing:textField];
 	}
@@ -148,8 +148,6 @@
 #pragma mark - UITextView delegate methods
 
 -(void)textViewDidBeginEditing:(UITextView *)textView {
-    [self scrollToActiveTextField];
-	
 	if(self.textViewDelegate && [self.textViewDelegate respondsToSelector:@selector(textViewDidBeginEditing:)]) {
 		[self.textViewDelegate textViewDidBeginEditing:textView];
 	}
