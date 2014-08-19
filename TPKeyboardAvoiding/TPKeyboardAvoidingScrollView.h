@@ -12,4 +12,8 @@
 - (void)contentSizeToFit;
 - (BOOL)focusNextTextField;
 - (void)scrollToActiveTextField;
+
+@property (strong, nonatomic) id<UITextFieldDelegate> textFieldDelegate;
+@property (strong, nonatomic) id<UITextViewDelegate> textViewDelegate;
+
 @end

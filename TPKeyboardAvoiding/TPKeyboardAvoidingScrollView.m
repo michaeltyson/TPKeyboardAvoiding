@@ -17,8 +17,6 @@
 - (void)setup {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TPKeyboardAvoiding_keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TPKeyboardAvoiding_keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToActiveTextField) name:UITextViewTextDidBeginEditingNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToActiveTextField) name:UITextFieldTextDidBeginEditingNotification object:nil];
 }
 
 -(id)initWithFrame:(CGRect)frame {
@@ -74,17 +72,130 @@
     [super touchesEnded:touches withEvent:event];
 }
 
--(BOOL)textFieldShouldReturn:(UITextField *)textField {
-    if ( ![self focusNextTextField] ) {
-        [textField resignFirstResponder];
-    }
-    return YES;
-}
-
 -(void)layoutSubviews {
     [super layoutSubviews];
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(TPKeyboardAvoiding_assignTextDelegateForViewsBeneathView:) object:self];
     [self performSelector:@selector(TPKeyboardAvoiding_assignTextDelegateForViewsBeneathView:) withObject:self afterDelay:0.1];
 }
+
+#pragma mark - UITextField delegate methods
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+    if ( ![self focusNextTextField] ) {
+        [textField resignFirstResponder];
+    }
+
+	if(self.textFieldDelegate && [self.textFieldDelegate respondsToSelector:@selector(textFieldShouldReturn:)]) {
+		return [self.textFieldDelegate textFieldShouldReturn:textField];
+	}
+	
+    return YES;
+}
+
+-(void)textFieldDidBeginEditing:(UITextField *)textField {
+    [self scrollToActiveTextField];
+	
+	if(self.textFieldDelegate && [self.textFieldDelegate respondsToSelector:@selector(textFieldDidBeginEditing:)]) {
+		[self.textFieldDelegate textFieldDidBeginEditing:textField];
+	}
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField {
+	if(self.textFieldDelegate && [self.textFieldDelegate respondsToSelector:@selector(textFieldDidEndEditing:)]) {
+		[self.textFieldDelegate textFieldDidEndEditing:textField];
+	}
+}
+
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+	if(self.textFieldDelegate && [self.textFieldDelegate respondsToSelector:@selector(textFieldShouldBeginEditing:)]) {
+		return [self.textFieldDelegate textFieldShouldBeginEditing:textField];
+	}
+	
+	return YES;
+}
+
+-(BOOL)textFieldShouldEndEditing:(UITextField *)textField {
+	if(self.textFieldDelegate && [self.textFieldDelegate respondsToSelector:@selector(textFieldShouldEndEditing:)]) {
+		return [self.textFieldDelegate textFieldShouldEndEditing:textField];
+	}
+	
+	return YES;
+}
+
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+	if(self.textFieldDelegate && [self.textFieldDelegate respondsToSelector:@selector(textField:shouldChangeCharactersInRange:replacementString:)]) {
+		return [self.textFieldDelegate textField:textField shouldChangeCharactersInRange:range replacementString:string];
+	}
+	
+	return YES;
+}
+
+-(BOOL)textFieldShouldClear:(UITextField *)textField {
+	if(self.textFieldDelegate && [self.textFieldDelegate respondsToSelector:@selector(textFieldShouldClear:)]) {
+		return [self.textFieldDelegate textFieldShouldClear:textField];
+	}
+	
+	return YES;
+}
+
+#pragma mark - UITextView delegate methods
+
+-(void)textViewDidBeginEditing:(UITextView *)textView {
+    [self scrollToActiveTextField];
+	
+	if(self.textViewDelegate && [self.textViewDelegate respondsToSelector:@selector(textViewDidBeginEditing:)]) {
+		[self.textViewDelegate textViewDidBeginEditing:textView];
+	}
+}
+
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView {
+	if(self.textViewDelegate && [self.textViewDelegate respondsToSelector:@selector(textViewShouldEndEditing:)]) {
+		return [self.textViewDelegate textViewShouldEndEditing:textView];
+	}
+	
+	return YES;
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+	if(self.textViewDelegate && [self.textViewDelegate respondsToSelector:@selector(textViewDidEndEditing:)]) {
+		return [self.textViewDelegate textViewDidEndEditing:textView];
+	}
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+	if(self.textViewDelegate && [self.textViewDelegate respondsToSelector:@selector(textView:shouldChangeTextInRange:replacementText:)]) {
+		return [self.textViewDelegate textView:textView shouldChangeTextInRange:range replacementText:text];
+	}
+	
+	return YES;
+}
+
+- (void)textViewDidChange:(UITextView *)textView {
+	if(self.textViewDelegate && [self.textViewDelegate respondsToSelector:@selector(textViewDidChange:)]) {
+		return [self.textViewDelegate textViewDidChange:textView];
+	}
+}
+
+- (void)textViewDidChangeSelection:(UITextView *)textView {
+	if(self.textViewDelegate && [self.textViewDelegate respondsToSelector:@selector(textViewDidChangeSelection:)]) {
+		return [self.textViewDelegate textViewDidChangeSelection:textView];
+	}
+}
+
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange {
+	if(self.textViewDelegate && [self.textViewDelegate respondsToSelector:@selector(textView:shouldInteractWithURL:inRange:)]) {
+		return [self.textViewDelegate textView:textView shouldInteractWithURL:URL inRange:characterRange];
+	}
+	return YES;
+}
+
+- (BOOL)textView:(UITextView *)textView shouldInteractWithTextAttachment:(NSTextAttachment *)textAttachment inRange:(NSRange)characterRange {
+	if(self.textViewDelegate && [self.textViewDelegate respondsToSelector:@selector(textView:shouldInteractWithTextAttachment:inRange:)]) {
+		return [self.textViewDelegate textView:textView shouldInteractWithTextAttachment:textAttachment inRange:characterRange];
+	}
+	
+	return YES;	
+}
+
 
 @end
