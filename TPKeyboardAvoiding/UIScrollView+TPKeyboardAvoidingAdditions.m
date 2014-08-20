@@ -23,6 +23,9 @@ static const int kStateKey;
 @property (nonatomic, assign) BOOL         keyboardVisible;
 @property (nonatomic, assign) CGRect       keyboardRect;
 @property (nonatomic, assign) CGSize       priorContentSize;
+
+
+@property (nonatomic) BOOL priorPagingEnabled;
 @end
 
 @implementation UIScrollView (TPKeyboardAvoidingAdditions)
@@ -52,6 +55,9 @@ static const int kStateKey;
     state.keyboardVisible = YES;
     state.priorInset = self.contentInset;
     state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
+    
+    state.priorPagingEnabled = self.pagingEnabled;
+    self.pagingEnabled = NO;
     
     if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
         state.priorContentSize = self.contentSize;
@@ -104,6 +110,7 @@ static const int kStateKey;
     
     self.contentInset = state.priorInset;
     self.scrollIndicatorInsets = state.priorScrollIndicatorInsets;
+    self.pagingEnabled = state.priorPagingEnabled;
     [UIView commitAnimations];
 }
 
