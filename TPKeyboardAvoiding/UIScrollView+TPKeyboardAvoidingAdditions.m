@@ -17,6 +17,9 @@ static const int kStateKey;
 
 #define _UIKeyboardFrameEndUserInfoKey (&UIKeyboardFrameEndUserInfoKey != NULL ? UIKeyboardFrameEndUserInfoKey : @"UIKeyboardBoundsUserInfoKey")
 
+#define fequal(a,b) (fabs((a) - (b)) < DBL_EPSILON)
+
+
 @interface TPKeyboardAvoidingState : NSObject
 @property (nonatomic, assign) UIEdgeInsets priorInset;
 @property (nonatomic, assign) UIEdgeInsets priorScrollIndicatorInsets;
@@ -181,7 +184,7 @@ static const int kStateKey;
             if ( childView != priorTextField
                     && CGRectGetMinY(frame) >= priorFieldOffset
                     && CGRectGetMinY(frame) < *minY &&
-                    !(frame.origin.y == priorTextField.frame.origin.y
+                    !(fequal(frame.origin.y, priorTextField.frame.origin.y)
                       && frame.origin.x < priorTextField.frame.origin.x) ) {
                 *minY = CGRectGetMinY(frame);
                 *foundView = childView;
