@@ -79,6 +79,7 @@ static const int kStateKey;
     }
     
     self.scrollIndicatorInsets = self.contentInset;
+    [self layoutIfNeeded];
     
     [UIView commitAnimations];
 }
@@ -104,6 +105,7 @@ static const int kStateKey;
     
     self.contentInset = state.priorInset;
     self.scrollIndicatorInsets = state.priorScrollIndicatorInsets;
+    [self layoutIfNeeded];
     [UIView commitAnimations];
 }
 
@@ -156,6 +158,7 @@ static const int kStateKey;
     // scroll to the desired content offset. So we wrap in our own animation block.
     [UIView animateWithDuration:0.25 animations:^{
         [self setContentOffset:idealOffset animated:NO];
+        [self layoutIfNeeded];
     }];
 }
 
