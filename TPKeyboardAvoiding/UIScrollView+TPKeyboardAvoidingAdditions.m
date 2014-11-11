@@ -49,7 +49,7 @@ static const int kStateKey;
     UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
     
     state.keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
-    state.keyboardVisible = YES;
+    state.keyboardVisible = !CGRectIsEmpty(state.keyboardRect);
     state.priorInset = self.contentInset;
     state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
     
