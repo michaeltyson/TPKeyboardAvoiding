@@ -40,6 +40,11 @@ static const int kStateKey;
 }
 
 - (void)TPKeyboardAvoiding_keyboardWillShow:(NSNotification*)notification {
+    CGRect keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    if (CGRectIsEmpty(keyboardRect)) {
+        return;
+    }
+    
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     
     if ( state.keyboardVisible ) {
@@ -48,7 +53,7 @@ static const int kStateKey;
     
     UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
     
-    state.keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    state.keyboardRect = keyboardRect;
     state.keyboardVisible = YES;
     state.priorInset = self.contentInset;
     state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
@@ -84,6 +89,11 @@ static const int kStateKey;
 }
 
 - (void)TPKeyboardAvoiding_keyboardWillHide:(NSNotification*)notification {
+    CGRect keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    if (CGRectIsEmpty(keyboardRect)) {
+        return;
+    }
+    
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     
     if ( !state.keyboardVisible ) {
