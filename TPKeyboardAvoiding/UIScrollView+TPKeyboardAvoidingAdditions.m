@@ -50,9 +50,9 @@ static const int kStateKey;
     
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     
-    if ( state.keyboardVisible ) {
-        return;
-    }
+//    if ( state.keyboardVisible ) {
+//        return;
+//    }
     
     UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
     
@@ -115,8 +115,10 @@ static const int kStateKey;
         self.contentSize = state.priorContentSize;
     }
     
-    self.contentInset = state.priorInset;
-    self.scrollIndicatorInsets = state.priorScrollIndicatorInsets;
+//    self.contentInset = state.priorInset;
+//    self.scrollIndicatorInsets = state.priorScrollIndicatorInsets;
+    self.contentInset = UIEdgeInsetsZero;
+    self.scrollIndicatorInsets = UIEdgeInsetsZero;
     [UIView commitAnimations];
 }
 
