@@ -17,6 +17,9 @@ static const int kStateKey;
 
 #define _UIKeyboardFrameEndUserInfoKey (&UIKeyboardFrameEndUserInfoKey != NULL ? UIKeyboardFrameEndUserInfoKey : @"UIKeyboardBoundsUserInfoKey")
 
+#define fequal(a,b) (fabs((a) - (b)) < DBL_EPSILON)
+
+
 @interface TPKeyboardAvoidingState : NSObject
 @property (nonatomic, assign) UIEdgeInsets priorInset;
 @property (nonatomic, assign) UIEdgeInsets priorScrollIndicatorInsets;
@@ -181,7 +184,7 @@ static const int kStateKey;
     return nil;
 }
 
-- (void)TPKeyboardAvoiding_findTextFieldAfterTextField:(UIView*)priorTextField beneathView:(UIView*)view minY:(CGFloat*)minY foundView:(UIView**)foundView {
+- (void)TPKeyboardAvoiding_findTextFieldAfterTextField:(UIView*)priorTextField beneathView:(UIView*)view minY:(CGFloat*)minY foundView:(UIView* __autoreleasing *)foundView {
     // Search recursively for text field or text view below priorTextField
     CGFloat priorFieldOffset = CGRectGetMinY([self convertRect:priorTextField.frame fromView:priorTextField.superview]);
     for ( UIView *childView in view.subviews ) {
@@ -191,7 +194,7 @@ static const int kStateKey;
             if ( childView != priorTextField
                     && CGRectGetMinY(frame) >= priorFieldOffset
                     && CGRectGetMinY(frame) < *minY &&
-                    !(frame.origin.y == priorTextField.frame.origin.y
+                    !(fequal(frame.origin.y, priorTextField.frame.origin.y)
                       && frame.origin.x < priorTextField.frame.origin.x) ) {
                 *minY = CGRectGetMinY(frame);
                 *foundView = childView;
