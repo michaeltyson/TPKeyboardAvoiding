@@ -61,12 +61,15 @@ static const int kStateKey;
     
     state.keyboardRect = keyboardRect;
     state.keyboardVisible = YES;
-    state.priorInset = self.contentInset;
-    state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
     
-    state.priorPagingEnabled = self.pagingEnabled;
+    if ( !state.keyboardVisible ) {
+        state.priorInset = self.contentInset;
+        state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
+        state.priorPagingEnabled = self.pagingEnabled;
+    }
+
     self.pagingEnabled = NO;
-    
+        
     if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
         state.priorContentSize = self.contentSize;
         
