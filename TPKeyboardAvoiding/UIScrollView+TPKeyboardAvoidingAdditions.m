@@ -94,6 +94,7 @@ static const int kStateKey;
                   animated:NO];
     
     self.scrollIndicatorInsets = self.contentInset;
+    [self layoutIfNeeded];
     
     [UIView commitAnimations];
 }
@@ -125,6 +126,7 @@ static const int kStateKey;
     self.contentInset = state.priorInset;
     self.scrollIndicatorInsets = state.priorScrollIndicatorInsets;
     self.pagingEnabled = state.priorPagingEnabled;
+	[self layoutIfNeeded];
     [UIView commitAnimations];
 }
 
@@ -173,11 +175,11 @@ static const int kStateKey;
     CGPoint idealOffset = CGPointMake(0, [self TPKeyboardAvoiding_idealOffsetForView:[self TPKeyboardAvoiding_findFirstResponderBeneathView:self]
                                                                withViewingAreaHeight:visibleSpace]);
 
-    // Ordinarily we'd use -setContentOffset:animated:YES here, but it does not appear to
-    // scroll to the desired content offset. So we wrap in our own animation block.
-    [UIView animateWithDuration:0.25 animations:^{
-        [self setContentOffset:idealOffset animated:NO];
-    }];
+    // Ordinarily we'd use -setContentOffset:animated:YES here, but it interferes with UIScrollView
+    // behavior which automatically ensures that the first responder is within its bounds
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self setContentOffset:idealOffset animated:YES];
+    });
 }
 
 #pragma mark - Helpers
