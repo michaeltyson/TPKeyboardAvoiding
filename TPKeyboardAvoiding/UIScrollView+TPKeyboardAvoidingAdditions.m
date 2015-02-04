@@ -59,7 +59,7 @@ static const int kStateKey;
     
     UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
     
-    if (!firstResponder) {
+    if ( !firstResponder ) {
         return;
     }
     
@@ -88,13 +88,11 @@ static const int kStateKey;
     
     self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
     
-    if ( firstResponder ) {
-        CGFloat viewableHeight = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
-        [self setContentOffset:CGPointMake(self.contentOffset.x,
-                                           [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
-                                                                 withViewingAreaHeight:viewableHeight])
-                      animated:NO];
-    }
+    CGFloat viewableHeight = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
+    [self setContentOffset:CGPointMake(self.contentOffset.x,
+                                       [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
+                                                             withViewingAreaHeight:viewableHeight])
+                  animated:NO];
     
     self.scrollIndicatorInsets = self.contentInset;
     
