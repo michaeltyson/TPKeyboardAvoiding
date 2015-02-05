@@ -60,14 +60,14 @@ static const int kStateKey;
     }
     
     state.keyboardRect = keyboardRect;
-    state.keyboardVisible = YES;
     
     if ( !state.keyboardVisible ) {
         state.priorInset = self.contentInset;
         state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
         state.priorPagingEnabled = self.pagingEnabled;
     }
-
+    
+    state.keyboardVisible = YES;
     self.pagingEnabled = NO;
         
     if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
