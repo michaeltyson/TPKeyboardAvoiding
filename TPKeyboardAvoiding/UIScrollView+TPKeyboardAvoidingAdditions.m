@@ -26,6 +26,7 @@ static const int kStateKey;
 @property (nonatomic, assign) BOOL         keyboardVisible;
 @property (nonatomic, assign) CGRect       keyboardRect;
 @property (nonatomic, assign) CGSize       priorContentSize;
+@property (nonatomic, assign) CGPoint       priorOffset;
 
 
 @property (nonatomic) BOOL priorPagingEnabled;
@@ -65,6 +66,7 @@ static const int kStateKey;
         state.priorInset = self.contentInset;
         state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
         state.priorPagingEnabled = self.pagingEnabled;
+        state.priorOffset = self.contentOffset;
     }
     
     state.keyboardVisible = YES;
@@ -126,6 +128,7 @@ static const int kStateKey;
     self.contentInset = state.priorInset;
     self.scrollIndicatorInsets = state.priorScrollIndicatorInsets;
     self.pagingEnabled = state.priorPagingEnabled;
+    self.contentOffset = state.priorOffset;
 	[self layoutIfNeeded];
     [UIView commitAnimations];
 }
