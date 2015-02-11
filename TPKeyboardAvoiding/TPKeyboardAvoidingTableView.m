@@ -50,6 +50,11 @@
 }
 
 -(void)setContentSize:(CGSize)contentSize {
+	if (CGSizeEqualToSize(contentSize, self.contentSize)) {
+		// Prevent triggering contentSize when it's already the same
+		// this cause table view to scroll to top on contentInset changes
+		return;
+	}
     [super setContentSize:contentSize];
     [self TPKeyboardAvoiding_updateContentInset];
 }
