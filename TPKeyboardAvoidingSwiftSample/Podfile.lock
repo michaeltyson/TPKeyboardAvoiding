@@ -1,0 +1,14 @@
+PODS:
+  - TPKeyboardAvoiding (1.2.6)
+
+DEPENDENCIES:
+  - TPKeyboardAvoiding (from `../`)
+
+EXTERNAL SOURCES:
+  TPKeyboardAvoiding:
+    :path: ../
+
+SPEC CHECKSUMS:
+  TPKeyboardAvoiding: d4568a3e801f892870928029b48619c864eecc08
+
+COCOAPODS: 0.35.0
