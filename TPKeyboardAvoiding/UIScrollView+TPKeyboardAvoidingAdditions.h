@@ -19,4 +19,9 @@
 - (void)TPKeyboardAvoiding_assignTextDelegateForViewsBeneathView:(UIView*)view;
 - (UIView*)TPKeyboardAvoiding_findFirstResponderBeneathView:(UIView*)view;
 -(CGSize)TPKeyboardAvoiding_calculatedContentSizeFromSubviewFrames;
+
+/// When set, apply an additional content offset to the offset
+/// TPKeyboardAvoiding would apply normally.
+- (void)TPKeyboardAvoiding_setAdditionalContentOffset:(CGPoint)contentOffset;
+
 @end

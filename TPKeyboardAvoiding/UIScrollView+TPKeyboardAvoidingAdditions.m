@@ -26,6 +26,7 @@ static const int kStateKey;
 @property (nonatomic, assign) BOOL         keyboardVisible;
 @property (nonatomic, assign) CGRect       keyboardRect;
 @property (nonatomic, assign) CGSize       priorContentSize;
+@property (nonatomic, assign) CGPoint      additionalContentOffset;
 
 
 @property (nonatomic) BOOL priorPagingEnabled;
@@ -88,9 +89,10 @@ static const int kStateKey;
     self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
     
     CGFloat viewableHeight = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
-    [self setContentOffset:CGPointMake(self.contentOffset.x,
+    [self setContentOffset:CGPointMake(self.contentOffset.x + state.additionalContentOffset.x,
                                        [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
-                                                             withViewingAreaHeight:viewableHeight])
+                                                             withViewingAreaHeight:viewableHeight]
+                                       + state.additionalContentOffset.y)
                   animated:NO];
     
     self.scrollIndicatorInsets = self.contentInset;
@@ -172,14 +174,21 @@ static const int kStateKey;
     
     CGFloat visibleSpace = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
     
-    CGPoint idealOffset = CGPointMake(0, [self TPKeyboardAvoiding_idealOffsetForView:[self TPKeyboardAvoiding_findFirstResponderBeneathView:self]
-                                                               withViewingAreaHeight:visibleSpace]);
+    CGPoint idealOffset = CGPointMake(0 + state.additionalContentOffset.x,
+                                      [self TPKeyboardAvoiding_idealOffsetForView:[self TPKeyboardAvoiding_findFirstResponderBeneathView:self]
+                                                            withViewingAreaHeight:visibleSpace]
+                                      + state.additionalContentOffset.y);
 
     // Ordinarily we'd use -setContentOffset:animated:YES here, but it interferes with UIScrollView
     // behavior which automatically ensures that the first responder is within its bounds
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self setContentOffset:idealOffset animated:YES];
     });
+}
+
+- (void)TPKeyboardAvoiding_setAdditionalContentOffset:(CGPoint)contentOffset {
+    TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
+    state.additionalContentOffset = contentOffset;
 }
 
 #pragma mark - Helpers
