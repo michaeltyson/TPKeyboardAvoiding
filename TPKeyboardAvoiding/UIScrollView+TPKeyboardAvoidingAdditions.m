@@ -198,8 +198,7 @@ static const int kStateKey;
     // Search recursively for text field or text view below priorTextField
     CGFloat priorFieldOffset = CGRectGetMinY([self convertRect:priorTextField.frame fromView:priorTextField.superview]);
     for ( UIView *childView in view.subviews ) {
-        if ( childView.hidden ) continue;
-        if ( ([childView isKindOfClass:[UITextField class]] || [childView isKindOfClass:[UITextView class]]) && childView.isUserInteractionEnabled) {
+        if ([self TPKeyboardAvoiding_viewIsNextTextField:childView]) {
             CGRect frame = [self convertRect:childView.frame fromView:view];
             if ( childView != priorTextField
                     && CGRectGetMinY(frame) >= priorFieldOffset
@@ -213,6 +212,24 @@ static const int kStateKey;
             [self TPKeyboardAvoiding_findTextFieldAfterTextField:priorTextField beneathView:childView minY:minY foundView:foundView];
         }
     }
+}
+
+- (BOOL)TPKeyboardAvoiding_viewIsNextTextField:(UIView *)view {
+    if (view.hidden) return NO;
+    
+    if ([view isKindOfClass:[UITextField class]]) {
+        UITextField *textField = (UITextField *)view;
+        if (!textField.enabled) return NO;
+        
+    }
+    
+    if ( ([view isKindOfClass:[UITextField class]] ||
+          [view isKindOfClass:[UITextView class]])
+        && view.isUserInteractionEnabled) {
+        return YES;
+    }
+    
+    return NO;
 }
 
 - (void)TPKeyboardAvoiding_assignTextDelegateForViewsBeneathView:(UIView*)view {
