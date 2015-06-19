@@ -172,7 +172,10 @@ static const int kStateKey;
     
     CGFloat visibleSpace = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
     
-    CGPoint idealOffset = CGPointMake(0, [self TPKeyboardAvoiding_idealOffsetForView:[self TPKeyboardAvoiding_findFirstResponderBeneathView:self]
+    
+    //As the initial offset can be different It's better to have it offset to its original location
+    //So we only manipulate the vertical movement.
+    CGPoint idealOffset = CGPointMake(self.contentOffset.y, [self TPKeyboardAvoiding_idealOffsetForView:[self TPKeyboardAvoiding_findFirstResponderBeneathView:self]
                                                                withViewingAreaHeight:visibleSpace]);
 
     // Ordinarily we'd use -setContentOffset:animated:YES here, but it interferes with UIScrollView
