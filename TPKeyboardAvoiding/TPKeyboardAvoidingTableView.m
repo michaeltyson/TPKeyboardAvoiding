@@ -15,6 +15,8 @@
 #pragma mark - Setup/Teardown
 
 - (void)setup {
+    if ( [self hasAutomaticKeyboardAvoidingBehaviour] ) return;
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TPKeyboardAvoiding_keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TPKeyboardAvoiding_keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToActiveTextField) name:UITextViewTextDidBeginEditingNotification object:nil];
@@ -44,12 +46,28 @@
 #endif
 }
 
+-(BOOL)hasAutomaticKeyboardAvoidingBehaviour {
+#if defined(__IPHONE_8_3)
+    // Apps built using the iOS 8.3 SDK (probably: older SDKs not tested) seem to handle keyboard
+    // avoiding automatically. This doesn't seem to be documented anywhere by Apple. Note: this only
+    // applies to UITableView.
+    return YES;
+#endif
+
+    return NO;
+}
+
 -(void)setFrame:(CGRect)frame {
     [super setFrame:frame];
+    if ( [self hasAutomaticKeyboardAvoidingBehaviour] ) return;
     [self TPKeyboardAvoiding_updateContentInset];
 }
 
 -(void)setContentSize:(CGSize)contentSize {
+    if ( [self hasAutomaticKeyboardAvoidingBehaviour] ) {
+        [super setContentSize:contentSize];
+        return;
+    }
 	if (CGSizeEqualToSize(contentSize, self.contentSize)) {
 		// Prevent triggering contentSize when it's already the same
 		// this cause table view to scroll to top on contentInset changes
