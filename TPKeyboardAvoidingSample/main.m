@@ -2,16 +2,15 @@
 //  main.m
 //  TPKeyboardAvoidingSample
 //
-//  Created by Michael Tyson on 14/04/2011.
-//  Copyright 2011 A Tasty Pixel. All rights reserved.
+//  Created by Michael Tyson on 26/06/2015.
+//  Copyright (c) 2015 A Tasty Pixel. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
+#import "AppDelegate.h"
 
-int main(int argc, char *argv[])
-{
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    int retVal = UIApplicationMain(argc, argv, nil, nil);
-    [pool release];
-    return retVal;
+int main(int argc, char * argv[]) {
+    @autoreleasepool {
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
+    }
 }
