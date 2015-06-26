@@ -17,9 +17,6 @@ static const int kStateKey;
 
 #define _UIKeyboardFrameEndUserInfoKey (&UIKeyboardFrameEndUserInfoKey != NULL ? UIKeyboardFrameEndUserInfoKey : @"UIKeyboardBoundsUserInfoKey")
 
-#define fequal(a,b) (fabs((a) - (b)) < DBL_EPSILON)
-
-
 @interface TPKeyboardAvoidingState : NSObject
 @property (nonatomic, assign) UIEdgeInsets priorInset;
 @property (nonatomic, assign) UIEdgeInsets priorScrollIndicatorInsets;
@@ -153,9 +150,7 @@ static const int kStateKey;
         return NO;
     }
     
-    CGFloat minY = CGFLOAT_MAX;
-    UIView *view = nil;
-    [self TPKeyboardAvoiding_findTextFieldAfterTextField:firstResponder beneathView:self minY:&minY foundView:&view];
+    UIView *view = [self TPKeyboardAvoiding_findNextInputViewAfterView:firstResponder beneathView:self];
     
     if ( view ) {
         [view performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.0];
@@ -194,38 +189,50 @@ static const int kStateKey;
     return nil;
 }
 
-- (void)TPKeyboardAvoiding_findTextFieldAfterTextField:(UIView*)priorTextField beneathView:(UIView*)view minY:(CGFloat*)minY foundView:(UIView* __autoreleasing *)foundView {
-    // Search recursively for text field or text view below priorTextField
-    CGFloat priorFieldOffset = CGRectGetMinY([self convertRect:priorTextField.frame fromView:priorTextField.superview]);
+- (UIView*)TPKeyboardAvoiding_findNextInputViewAfterView:(UIView*)priorView beneathView:(UIView*)view {
+    UIView * candidate = nil;
+    [self TPKeyboardAvoiding_findNextInputViewAfterView:priorView beneathView:view bestCandidate:&candidate];
+    return candidate;
+}
+
+- (void)TPKeyboardAvoiding_findNextInputViewAfterView:(UIView*)priorView beneathView:(UIView*)view bestCandidate:(UIView**)bestCandidate {
+    // Search recursively for input view below/to right of priorTextField
+    CGRect priorFrame = [self convertRect:priorView.frame fromView:priorView.superview];
+    CGRect candidateFrame = *bestCandidate ? [self convertRect:(*bestCandidate).frame fromView:(*bestCandidate).superview] : CGRectZero;
+    CGFloat bestCandidateHeuristic = -sqrt(candidateFrame.origin.x*candidateFrame.origin.x + candidateFrame.origin.y*candidateFrame.origin.y)
+                                        + (fabs(CGRectGetMinY(candidateFrame) - CGRectGetMinY(priorFrame)) < FLT_EPSILON ? 1e6 : 0);
+    
     for ( UIView *childView in view.subviews ) {
-        if ([self TPKeyboardAvoiding_viewIsNextTextField:childView]) {
+        if ( [self TPKeyboardAvoiding_viewIsValidKeyViewCandidate:childView] ) {
             CGRect frame = [self convertRect:childView.frame fromView:view];
-            if ( childView != priorTextField
-                    && CGRectGetMinY(frame) >= priorFieldOffset
-                    && CGRectGetMinY(frame) < *minY &&
-                    !(fequal(frame.origin.y, priorTextField.frame.origin.y)
-                      && frame.origin.x < priorTextField.frame.origin.x) ) {
-                *minY = CGRectGetMinY(frame);
-                *foundView = childView;
+            
+            // Use a heuristic to evaluate candidates: prefer elements closest to the top left, and on the same line
+            CGFloat heuristic = -sqrt(frame.origin.x*frame.origin.x + frame.origin.y*frame.origin.y)
+                                    + (fabs(CGRectGetMinY(frame) - CGRectGetMinY(priorFrame)) < FLT_EPSILON ? 1e6 : 0);
+            
+            // Find views beneath, or to the right. For those views that match, choose the view closest to the top left
+            if ( childView != priorView
+                    && ((fabs(CGRectGetMinY(frame) - CGRectGetMinY(priorFrame)) < FLT_EPSILON && CGRectGetMinX(frame) > CGRectGetMinX(priorFrame))
+                        || CGRectGetMinY(frame) > CGRectGetMinY(priorFrame))
+                    && (!*bestCandidate || heuristic > bestCandidateHeuristic) ) {
+                
+                *bestCandidate = childView;
+                bestCandidateHeuristic = heuristic;
             }
         } else {
-            [self TPKeyboardAvoiding_findTextFieldAfterTextField:priorTextField beneathView:childView minY:minY foundView:foundView];
+            [self TPKeyboardAvoiding_findNextInputViewAfterView:priorView beneathView:childView bestCandidate:bestCandidate];
         }
     }
 }
 
-- (BOOL)TPKeyboardAvoiding_viewIsNextTextField:(UIView *)view {
-    if (view.hidden) return NO;
+- (BOOL)TPKeyboardAvoiding_viewIsValidKeyViewCandidate:(UIView *)view {
+    if ( view.hidden || !view.userInteractionEnabled ) return NO;
     
-    if ([view isKindOfClass:[UITextField class]]) {
-        UITextField *textField = (UITextField *)view;
-        if (!textField.enabled) return NO;
-        
+    if ( [view isKindOfClass:[UITextField class]] && ((UITextField*)view).enabled ) {
+        return YES;
     }
     
-    if ( ([view isKindOfClass:[UITextField class]] ||
-          [view isKindOfClass:[UITextView class]])
-        && view.isUserInteractionEnabled) {
+    if ( [view isKindOfClass:[UITextView class]] && ((UITextView*)view).isEditable ) {
         return YES;
     }
     
@@ -308,9 +315,7 @@ static const int kStateKey;
             && ((UITextField*)view).returnKeyType == UIReturnKeyDefault
             && (![(UITextField*)view delegate] || [(UITextField*)view delegate] == (id<UITextFieldDelegate>)self) ) {
         [(UITextField*)view setDelegate:(id<UITextFieldDelegate>)self];
-        UIView *otherView = nil;
-        CGFloat minY = CGFLOAT_MAX;
-        [self TPKeyboardAvoiding_findTextFieldAfterTextField:view beneathView:self minY:&minY foundView:&otherView];
+        UIView *otherView = [self TPKeyboardAvoiding_findNextInputViewAfterView:view beneathView:self];
         
         if ( otherView ) {
             ((UITextField*)view).returnKeyType = UIReturnKeyNext;
