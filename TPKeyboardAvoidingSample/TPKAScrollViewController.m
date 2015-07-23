@@ -29,13 +29,23 @@ static const int kGroupCount = 5;
         textField.borderStyle = UITextBorderStyleRoundedRect;
         [self.scrollView addSubview:textField];
         
-        [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textField(==30)]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textField)]];
-        [self.view addConstraints:@[[NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeadingMargin multiplier:1 constant:0], [NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTrailingMargin multiplier:1 constant:0]]];
+        [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:30]];
+        
+        if ( (i % kGroupCount) < 3 ) {
+            UILabel * label = [[UILabel alloc] initWithFrame:CGRectZero];
+            label.translatesAutoresizingMaskIntoConstraints = NO;
+            label.text = @"Label";
+            [self.scrollView addSubview:label];
+            [self.view addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:textField attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+            [self.view addConstraints:@[[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeadingMargin multiplier:1 constant:0], [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:80], [NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:label attribute:NSLayoutAttributeTrailing multiplier:1 constant:10], [NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTrailingMargin multiplier:1 constant:0]]];
+        } else {
+            [self.view addConstraints:@[[NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeadingMargin multiplier:1 constant:0], [NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTrailingMargin multiplier:1 constant:0]]];
+        }
         
         if ( priorView ) {
             [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[priorView]-10-[textField]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(priorView, textField)]];
         } else {
-            [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[textField]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(textField)]];
+            [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.scrollView attribute:NSLayoutAttributeTopMargin multiplier:1 constant:0]];
         }
         
         priorView = textField;
