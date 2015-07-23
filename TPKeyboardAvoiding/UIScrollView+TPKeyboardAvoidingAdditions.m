@@ -196,38 +196,52 @@ static const int kStateKey;
 }
 
 - (void)TPKeyboardAvoiding_findNextInputViewAfterView:(UIView*)priorView beneathView:(UIView*)view bestCandidate:(UIView**)bestCandidate {
-    // Search recursively for input view below/to right of priorTextField
-    CGRect priorFrame = [self convertRect:priorView.frame fromView:priorView.superview];
-    CGRect candidateFrame = *bestCandidate ? [self convertRect:(*bestCandidate).frame fromView:(*bestCandidate).superview] : CGRectZero;
-    CGFloat bestCandidateHeuristic = -sqrt(candidateFrame.origin.x*candidateFrame.origin.x + candidateFrame.origin.y*candidateFrame.origin.y)
-                                        + (fabs(CGRectGetMinY(candidateFrame) - CGRectGetMinY(priorFrame)) < FLT_EPSILON ? 1e6 : 0);
-    
-    for ( UIView *childView in view.subviews ) {
-        if ( [self TPKeyboardAvoiding_viewIsValidKeyViewCandidate:childView] ) {
-            CGRect frame = [self convertRect:childView.frame fromView:view];
-            
-            // Use a heuristic to evaluate candidates: prefer elements closest to the top left, and on the same line
-            CGFloat heuristic = -sqrt(frame.origin.x*frame.origin.x + frame.origin.y*frame.origin.y)
-                                    + (fabs(CGRectGetMinY(frame) - CGRectGetMinY(priorFrame)) < FLT_EPSILON ? 1e6 : 0);
-            
-            // Find views beneath, or to the right. For those views that match, choose the view closest to the top left
-            if ( childView != priorView
-                    && ((fabs(CGRectGetMinY(frame) - CGRectGetMinY(priorFrame)) < FLT_EPSILON && CGRectGetMinX(frame) > CGRectGetMinX(priorFrame))
-                        || CGRectGetMinY(frame) > CGRectGetMinY(priorFrame))
-                    && (!*bestCandidate || heuristic > bestCandidateHeuristic) ) {
-                
-                *bestCandidate = childView;
-                bestCandidateHeuristic = heuristic;
-            }
-        } else {
-            [self TPKeyboardAvoiding_findNextInputViewAfterView:priorView beneathView:childView bestCandidate:bestCandidate];
+  // Search recursively for input view below/to right of priorTextField
+  CGRect priorFrame = [self convertRect:priorView.frame fromView:priorView.superview];
+  CGRect candidateFrame;
+  if (bestCandidate) {
+    candidateFrame = [self convertRect:(*bestCandidate).frame fromView:(*bestCandidate).superview];
+  }
+  for ( UIView *targetView in view.subviews ) {
+    CGRect targetFrame = [self convertRect:targetView.frame fromView:targetView.superview];
+    if ( [self TPKeyboardAvoiding_viewIsValidKeyViewCandidate:targetView] ) {
+      
+      if (targetView != priorView) {
+        if (!*bestCandidate && [self TPKeyboardAvoiding_targetFrame:targetFrame isCandidateForPriorFrame:priorFrame]) {
+          *bestCandidate = targetView;
+          candidateFrame = [self convertRect:(*bestCandidate).frame fromView:(*bestCandidate).superview];
         }
+        
+        if (CGRectGetMinY(targetFrame) > CGRectGetMinY(priorFrame)) {
+          if (CGRectGetMinY(targetFrame) < CGRectGetMinY(candidateFrame)) {
+            *bestCandidate = targetView;
+            candidateFrame = [self convertRect:(*bestCandidate).frame fromView:(*bestCandidate).superview];
+          } else if (CGRectGetMinY(targetFrame) == CGRectGetMinY(candidateFrame)) {
+            if (CGRectGetMinX(targetFrame) < CGRectGetMinX(candidateFrame)) {
+              *bestCandidate = targetView;
+              candidateFrame = [self convertRect:(*bestCandidate).frame fromView:(*bestCandidate).superview];
+            }
+          }
+        } else if (CGRectGetMinY(targetFrame) == CGRectGetMinY(priorFrame) && (CGRectGetMinX(targetFrame) > CGRectGetMinX(priorFrame))) {
+          *bestCandidate = targetView;
+          candidateFrame = [self convertRect:(*bestCandidate).frame fromView:(*bestCandidate).superview];
+          
+        } else if (CGRectGetMinY(targetFrame) == CGRectGetMinY(candidateFrame)) {
+          if (CGRectGetMinX(targetFrame) < CGRectGetMinX(candidateFrame)) {
+            *bestCandidate = targetView;
+            candidateFrame = [self convertRect:(*bestCandidate).frame fromView:(*bestCandidate).superview];
+          }
+        }
+      }
+    } else {
+      [self TPKeyboardAvoiding_findNextInputViewAfterView:priorView beneathView:targetView bestCandidate:bestCandidate];
     }
+  }
 }
 
 - (BOOL)TPKeyboardAvoiding_viewIsValidKeyViewCandidate:(UIView *)view {
     if ( view.hidden || !view.userInteractionEnabled ) return NO;
-    
+  
     if ( [view isKindOfClass:[UITextField class]] && ((UITextField*)view).enabled ) {
         return YES;
     }
@@ -237,6 +251,18 @@ static const int kStateKey;
     }
     
     return NO;
+}
+
+- (BOOL)TPKeyboardAvoiding_targetFrame:(CGRect)targetFrame isCandidateForPriorFrame:(CGRect)priorFrame {
+  if (CGRectGetMinY(targetFrame) > CGRectGetMinY(priorFrame)) {
+    return YES;
+    
+  } else if (CGRectGetMinY(targetFrame) == CGRectGetMinY(priorFrame) && (CGRectGetMinX(targetFrame) > CGRectGetMinX(priorFrame))) {
+    return YES;
+    
+  } else {
+    return NO;
+  }
 }
 
 - (void)TPKeyboardAvoiding_assignTextDelegateForViewsBeneathView:(UIView*)view {
