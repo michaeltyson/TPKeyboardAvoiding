@@ -208,8 +208,6 @@ static const int kStateKey;
             // Use a heuristic to evaluate candidates
             CGFloat heuristic = [self TPKeyboardAvoiding_nextInputViewHeuristicForViewFrame:frame];
             
-            NSLog(@"%@: (%lfx%lf, %lf)", ((UITextField*)childView).placeholder, frame.origin.x, frame.origin.y, heuristic);
-            
             // Find views beneath, or to the right. For those views that match, choose the view closest to the top left
             if ( childView != priorView
                     && ((fabs(CGRectGetMinY(frame) - CGRectGetMinY(priorFrame)) < FLT_EPSILON && CGRectGetMinX(frame) > CGRectGetMinX(priorFrame))
