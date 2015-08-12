@@ -117,7 +117,8 @@ static const int kStateKey;
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
     
     if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
-        self.contentSize = state.priorContentSize;
+        //self.contentSize = state.priorContentSize;
+        self.contentSize = CGSizeMake(0.0f, 0.0f);
     }
     
     self.contentInset = state.priorInset;
