@@ -27,6 +27,8 @@ static const int kGroupCount = 5;
         textField.translatesAutoresizingMaskIntoConstraints = NO;
         textField.placeholder = [NSString stringWithFormat:@"Field %d", i];
         textField.borderStyle = UITextBorderStyleRoundedRect;
+        textField.secureTextEntry = i == 39;
+
         [self.scrollView addSubview:textField];
         
         [self.scrollView addConstraint:[NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:30]];
