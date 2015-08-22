@@ -10,8 +10,8 @@
 #import "TPKeyboardAvoidingScrollView.h"
 #import <objc/runtime.h>
 
-static const CGFloat kCalculatedContentPadding = 10;
-static const CGFloat kMinimumScrollOffsetPadding = 20;
+static const CGFloat kCalculatedContentPadding = 0;
+static const CGFloat kMinimumScrollOffsetPadding = 0;
 
 static const int kStateKey;
 
