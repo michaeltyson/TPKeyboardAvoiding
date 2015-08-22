@@ -10,8 +10,8 @@
 #import "TPKeyboardAvoidingScrollView.h"
 #import <objc/runtime.h>
 
-static const CGFloat kCalculatedContentPadding = 0;
-static const CGFloat kMinimumScrollOffsetPadding = 0;
+static const CGFloat kCalculatedContentPadding = 10;
+static const CGFloat kMinimumScrollOffsetPadding = 20;
 
 static const int kStateKey;
 
@@ -301,8 +301,9 @@ static const int kStateKey;
     
     // Constrain the new contentOffset so we can't scroll past the bottom. Note that we don't take the bottom
     // inset into account, as this is manipulated to make space for the keyboard.
-    if ( offset > (contentSize.height - viewAreaHeight) ) {
-        offset = contentSize.height - viewAreaHeight;
+    CGFloat maxOffset = contentSize.height - viewAreaHeight - self.contentInset.top;
+    if (offset > maxOffset) {
+        offset = maxOffset;
     }
     
     // Constrain the new contentOffset so we can't scroll past the top, taking contentInsets into account
