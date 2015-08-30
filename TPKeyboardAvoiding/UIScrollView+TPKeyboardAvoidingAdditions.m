@@ -121,6 +121,7 @@ static const int kStateKey;
     }
     
     self.contentInset = state.priorInset;
+    self.contentOffset = CGPointMake(self.contentOffset.x, [self TPKeyboardAvoiding_offsetAvoidingOverScroll]);
     self.scrollIndicatorInsets = state.priorScrollIndicatorInsets;
     self.pagingEnabled = state.priorPagingEnabled;
 	[self layoutIfNeeded];
@@ -279,6 +280,14 @@ static const int kStateKey;
     CGRect keyboardRect = state.keyboardRect;
     newInset.bottom = keyboardRect.size.height - MAX((CGRectGetMaxY(keyboardRect) - CGRectGetMaxY(self.bounds)), 0);
     return newInset;
+}
+
+- (CGFloat)TPKeyboardAvoiding_offsetAvoidingOverScroll {
+    if (self.contentOffset.y + self.frame.size.height > self.contentSize.height + self.contentInset.bottom) {
+        return self.contentSize.height + self.contentInset.bottom - self.frame.size.height;
+    } else {
+        return self.contentOffset.y;
+    }
 }
 
 -(CGFloat)TPKeyboardAvoiding_idealOffsetForView:(UIView *)view withViewingAreaHeight:(CGFloat)viewAreaHeight {
