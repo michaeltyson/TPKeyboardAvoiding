@@ -62,6 +62,8 @@ static const int kStateKey;
         state.priorInset = self.contentInset;
         state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
         state.priorPagingEnabled = self.pagingEnabled;
+    } else {
+        return;
     }
     
     state.keyboardVisible = YES;
