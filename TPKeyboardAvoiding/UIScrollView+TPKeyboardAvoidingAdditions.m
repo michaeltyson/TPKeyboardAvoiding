@@ -240,8 +240,20 @@ static const int kStateKey;
           + (-frame.origin.x);         // Prefer elements closest to left
 }
 
+- (BOOL)TPKeyboardAvoiding_viewHiddenOrUserInteractionNotEnabled:(UIView *)view
+{
+    UIView *checkView = view;
+    while (checkView) {
+        if (checkView.hidden || !checkView.userInteractionEnabled) {
+            return YES;
+        }
+        checkView = checkView.superview;
+    }
+    return NO;
+}
+
 - (BOOL)TPKeyboardAvoiding_viewIsValidKeyViewCandidate:(UIView *)view {
-    if ( view.hidden || !view.userInteractionEnabled ) return NO;
+    if ( [self TPKeyboardAvoiding_viewHiddenOrUserInteractionNotEnabled:view] ) return NO;
     
     if ( [view isKindOfClass:[UITextField class]] && ((UITextField*)view).enabled ) {
         return YES;
