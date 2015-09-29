@@ -23,9 +23,8 @@ static const int kStateKey;
 @property (nonatomic, assign) BOOL         keyboardVisible;
 @property (nonatomic, assign) CGRect       keyboardRect;
 @property (nonatomic, assign) CGSize       priorContentSize;
-
-
-@property (nonatomic) BOOL priorPagingEnabled;
+@property (nonatomic, assign) BOOL         priorPagingEnabled;
+@property (nonatomic, assign) BOOL         ignoringNotifications;
 @end
 
 @implementation UIScrollView (TPKeyboardAvoidingAdditions)
@@ -49,6 +48,10 @@ static const int kStateKey;
     }
     
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
+    
+    if ( state.ignoringNotifications ) {
+        return;
+    }
     
     UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
     
@@ -104,6 +107,10 @@ static const int kStateKey;
     
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     
+    if ( state.ignoringNotifications ) {
+        return;
+    }
+    
     if ( !state.keyboardVisible ) {
         return;
     }
@@ -153,7 +160,12 @@ static const int kStateKey;
     UIView *view = [self TPKeyboardAvoiding_findNextInputViewAfterView:firstResponder beneathView:self];
     
     if ( view ) {
-        [view performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.0];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0), dispatch_get_main_queue(), ^{
+            TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
+            state.ignoringNotifications = YES;
+            [view becomeFirstResponder];
+            state.ignoringNotifications = NO;
+        });
         return YES;
     }
     
