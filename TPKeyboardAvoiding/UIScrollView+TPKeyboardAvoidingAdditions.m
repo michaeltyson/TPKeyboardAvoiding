@@ -43,7 +43,7 @@ static const int kStateKey;
 
 - (void)TPKeyboardAvoiding_keyboardWillShow:(NSNotification*)notification {
     CGRect keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
-    if (CGRectIsEmpty(keyboardRect)) {
+    if (CGRectIsEmpty(keyboardRect) || !CGRectIntersectsRect(keyboardRect, self.bounds)) {
         return;
     }
     
@@ -79,22 +79,27 @@ static const int kStateKey;
             self.contentSize = [self TPKeyboardAvoiding_calculatedContentSizeFromSubviewFrames];
         }
     }
-    
+    int curve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
+    float duration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    if (curve == 0)
+        curve = 7;
+    if (duration == 0)
+        duration = 0.25;
     // Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
     [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
-    [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
+    [UIView setAnimationCurve:curve];
+    [UIView setAnimationDuration:duration];
     
     self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
     
+    self.scrollIndicatorInsets = self.contentInset;
+    [self layoutIfNeeded];
     CGFloat viewableHeight = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
     [self setContentOffset:CGPointMake(self.contentOffset.x,
                                        [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
                                                              withViewingAreaHeight:viewableHeight])
                   animated:NO];
     
-    self.scrollIndicatorInsets = self.contentInset;
-    [self layoutIfNeeded];
     
     [UIView commitAnimations];
 }
