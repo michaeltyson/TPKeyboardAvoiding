@@ -107,6 +107,7 @@ static const int kStateKey;
         
         [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
         [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
+        [UIView setAnimationBeginsFromCurrentState:YES];
         
         self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
         
@@ -160,6 +161,7 @@ static const int kStateKey;
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
+    [UIView setAnimationBeginsFromCurrentState:YES];
     
     if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
         self.contentSize = state.priorContentSize;
