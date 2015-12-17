@@ -25,6 +25,7 @@ static const int kStateKey;
 @property (nonatomic, assign) CGSize       priorContentSize;
 @property (nonatomic, assign) BOOL         priorPagingEnabled;
 @property (nonatomic, assign) BOOL         ignoringNotifications;
+@property(nonatomic, assign) BOOL keyboardAnimationInProgress;
 @end
 
 @implementation UIScrollView (TPKeyboardAvoidingAdditions)
@@ -76,6 +77,11 @@ static const int kStateKey;
     
     // Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
     [UIView beginAnimations:nil context:NULL];
+    
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationWillStartSelector:@selector(keyboardViewAppear:context:)];
+    [UIView setAnimationDidStopSelector:@selector(keyboardViewDisappear:finished:context:)];
+    
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
     
@@ -96,9 +102,19 @@ static const int kStateKey;
     [UIView commitAnimations];
 }
 
+- (void)keyboardViewAppear:(NSString *)animationID context:(void *)context {
+    self.keyboardAvoidingState.keyboardAnimationInProgress = true;
+}
+
+- (void)keyboardViewDisappear:(NSString *)animationID finished:(BOOL)finished context:(void *)context {
+    if (finished) {
+        self.keyboardAvoidingState.keyboardAnimationInProgress = false;
+    }
+}
+
 - (void)TPKeyboardAvoiding_keyboardWillHide:(NSNotification*)notification {
     CGRect keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
-    if (CGRectIsEmpty(keyboardRect)) {
+    if (CGRectIsEmpty(keyboardRect) && !self.keyboardAvoidingState.keyboardAnimationInProgress) {
         return;
     }
     
