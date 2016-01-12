@@ -190,6 +190,10 @@ static const int kStateKey;
     
     if ( !state.keyboardVisible ) return;
     
+    UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
+    if ( !firstResponder ) {
+        return;
+    }
     // Ignore any keyboard notification that occur while we scroll
     //  (seems to be an iOS 9 bug that causes jumping text in UITextField)
     state.ignoringNotifications = YES;
@@ -198,7 +202,7 @@ static const int kStateKey;
     
     CGPoint idealOffset
         = CGPointMake(self.contentOffset.x,
-                      [self TPKeyboardAvoiding_idealOffsetForView:[self TPKeyboardAvoiding_findFirstResponderBeneathView:self]
+                      [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
                                             withViewingAreaHeight:visibleSpace]);
 
     // Ordinarily we'd use -setContentOffset:animated:YES here, but it interferes with UIScrollView
