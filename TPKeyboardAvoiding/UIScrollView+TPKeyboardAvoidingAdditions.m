@@ -23,9 +23,9 @@ static const int kStateKey;
 @property (nonatomic, assign) BOOL         keyboardVisible;
 @property (nonatomic, assign) CGRect       keyboardRect;
 @property (nonatomic, assign) CGSize       priorContentSize;
-
-
-@property (nonatomic) BOOL priorPagingEnabled;
+@property (nonatomic, assign) BOOL         priorPagingEnabled;
+@property (nonatomic, assign) BOOL         ignoringNotifications;
+@property(nonatomic, assign) BOOL keyboardAnimationInProgress;
 @end
 
 @implementation UIScrollView (TPKeyboardAvoidingAdditions)
@@ -50,9 +50,7 @@ static const int kStateKey;
     
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     
-    UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
-    
-    if ( !firstResponder ) {
+    if ( state.ignoringNotifications ) {
         return;
     }
     
@@ -79,16 +77,24 @@ static const int kStateKey;
     
     // Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
     [UIView beginAnimations:nil context:NULL];
+    
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationWillStartSelector:@selector(keyboardViewAppear:context:)];
+    [UIView setAnimationDidStopSelector:@selector(keyboardViewDisappear:finished:context:)];
+    
     [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
     [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
     
     self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
     
-    CGFloat viewableHeight = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
-    [self setContentOffset:CGPointMake(self.contentOffset.x,
-                                       [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
-                                                             withViewingAreaHeight:viewableHeight])
-                  animated:NO];
+    UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
+    if ( firstResponder ) {
+        CGFloat viewableHeight = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
+        [self setContentOffset:CGPointMake(self.contentOffset.x,
+                                           [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
+                                                                 withViewingAreaHeight:viewableHeight])
+                      animated:NO];
+    }
     
     self.scrollIndicatorInsets = self.contentInset;
     [self layoutIfNeeded];
@@ -96,13 +102,27 @@ static const int kStateKey;
     [UIView commitAnimations];
 }
 
+- (void)keyboardViewAppear:(NSString *)animationID context:(void *)context {
+    self.keyboardAvoidingState.keyboardAnimationInProgress = true;
+}
+
+- (void)keyboardViewDisappear:(NSString *)animationID finished:(BOOL)finished context:(void *)context {
+    if (finished) {
+        self.keyboardAvoidingState.keyboardAnimationInProgress = false;
+    }
+}
+
 - (void)TPKeyboardAvoiding_keyboardWillHide:(NSNotification*)notification {
     CGRect keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
-    if (CGRectIsEmpty(keyboardRect)) {
+    if (CGRectIsEmpty(keyboardRect) && !self.keyboardAvoidingState.keyboardAnimationInProgress) {
         return;
     }
     
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
+    
+    if ( state.ignoringNotifications ) {
+        return;
+    }
     
     if ( !state.keyboardVisible ) {
         return;
@@ -154,7 +174,12 @@ static const int kStateKey;
     UIView *view = [self TPKeyboardAvoiding_findNextInputViewAfterView:firstResponder beneathView:self];
     
     if ( view ) {
-        [view performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.0];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0), dispatch_get_main_queue(), ^{
+            TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
+            state.ignoringNotifications = YES;
+            [view becomeFirstResponder];
+            state.ignoringNotifications = NO;
+        });
         return YES;
     }
     
@@ -166,15 +191,23 @@ static const int kStateKey;
     
     if ( !state.keyboardVisible ) return;
     
+    // Ignore any keyboard notification that occur while we scroll
+    //  (seems to be an iOS 9 bug that causes jumping text in UITextField)
+    state.ignoringNotifications = YES;
+    
     CGFloat visibleSpace = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
     
-    CGPoint idealOffset = CGPointMake(0, [self TPKeyboardAvoiding_idealOffsetForView:[self TPKeyboardAvoiding_findFirstResponderBeneathView:self]
-                                                               withViewingAreaHeight:visibleSpace]);
+    CGPoint idealOffset
+        = CGPointMake(self.contentOffset.x,
+                      [self TPKeyboardAvoiding_idealOffsetForView:[self TPKeyboardAvoiding_findFirstResponderBeneathView:self]
+                                            withViewingAreaHeight:visibleSpace]);
 
     // Ordinarily we'd use -setContentOffset:animated:YES here, but it interferes with UIScrollView
     // behavior which automatically ensures that the first responder is within its bounds
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self setContentOffset:idealOffset animated:YES];
+        
+        state.ignoringNotifications = NO;
     });
 }
 
@@ -229,8 +262,18 @@ static const int kStateKey;
           + (-frame.origin.x);         // Prefer elements closest to left
 }
 
+- (BOOL)TPKeyboardAvoiding_viewHiddenOrUserInteractionNotEnabled:(UIView *)view {
+    while ( view ) {
+        if ( view.hidden || !view.userInteractionEnabled ) {
+            return YES;
+        }
+        view = view.superview;
+    }
+    return NO;
+}
+
 - (BOOL)TPKeyboardAvoiding_viewIsValidKeyViewCandidate:(UIView *)view {
-    if ( view.hidden || !view.userInteractionEnabled ) return NO;
+    if ( [self TPKeyboardAvoiding_viewHiddenOrUserInteractionNotEnabled:view] ) return NO;
     
     if ( [view isKindOfClass:[UITextField class]] && ((UITextField*)view).enabled ) {
         return YES;
@@ -302,8 +345,9 @@ static const int kStateKey;
     
     // Constrain the new contentOffset so we can't scroll past the bottom. Note that we don't take the bottom
     // inset into account, as this is manipulated to make space for the keyboard.
-    if ( offset > (contentSize.height - viewAreaHeight) ) {
-        offset = contentSize.height - viewAreaHeight;
+    CGFloat maxOffset = contentSize.height - viewAreaHeight - self.contentInset.top;
+    if (offset > maxOffset) {
+        offset = maxOffset;
     }
     
     // Constrain the new contentOffset so we can't scroll past the top, taking contentInsets into account
