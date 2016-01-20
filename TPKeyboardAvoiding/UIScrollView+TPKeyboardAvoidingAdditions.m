@@ -67,12 +67,16 @@ static const int kStateKey;
     if ( !state.keyboardVisible ) {
         state.priorInset = self.contentInset;
         state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
+#if TARGET_OS_IOS
         state.priorPagingEnabled = self.pagingEnabled;
+#endif
     }
 
     state.keyboardVisible = YES;
+#if TARGET_OS_IOS
     self.pagingEnabled = NO;
-
+#endif
+    
     if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
         state.priorContentSize = self.contentSize;
 
@@ -159,7 +163,9 @@ static const int kStateKey;
     
     self.contentInset = state.priorInset;
     self.scrollIndicatorInsets = state.priorScrollIndicatorInsets;
+#if TARGET_OS_IOS
     self.pagingEnabled = state.priorPagingEnabled;
+#endif
 	[self layoutIfNeeded];
     [UIView commitAnimations];
 }
@@ -298,11 +304,11 @@ static const int kStateKey;
     if ( [view isKindOfClass:[UITextField class]] && ((UITextField*)view).enabled ) {
         return YES;
     }
-    
+#if TARGET_OS_IOS
     if ( [view isKindOfClass:[UITextView class]] && ((UITextView*)view).isEditable ) {
         return YES;
     }
-    
+#endif
     return NO;
 }
 
