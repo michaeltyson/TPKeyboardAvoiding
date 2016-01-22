@@ -43,6 +43,10 @@ static const int kStateKey;
 }
 
 - (void)TPKeyboardAvoiding_keyboardWillShow:(NSNotification*)notification {
+    // Check that the iOS is at least 7. Using this pod on 7 leads to some unexpected jumpy behavior.
+    if (![[NSProcessInfo processInfo] respondsToSelector:@selector(isOperatingSystemAtLeastVersion:)]){
+        return;
+    }
     CGRect keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
     if (CGRectIsEmpty(keyboardRect)) {
         return;
@@ -188,7 +192,7 @@ static const int kStateKey;
 -(void)TPKeyboardAvoiding_scrollToActiveTextField {
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     
-    if ( !state.keyboardVisible ) return;
+    if ( !state.keyboardVisible || ![[NSProcessInfo processInfo] respondsToSelector:@selector(isOperatingSystemAtLeastVersion:)] ) return;
     
     UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
     if ( !firstResponder ) {
