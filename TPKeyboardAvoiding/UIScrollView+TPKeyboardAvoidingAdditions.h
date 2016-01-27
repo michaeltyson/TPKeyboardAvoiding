@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol TPKeyboardAvoidingAdditionsOptions <NSObject>
+- (BOOL)TPKeyboardAvoiding_idealOffsetForViewAlwaysTop;
+@end
+
 @interface UIScrollView (TPKeyboardAvoidingAdditions)
 - (BOOL)TPKeyboardAvoiding_focusNextTextField;
 - (void)TPKeyboardAvoiding_scrollToActiveTextField;

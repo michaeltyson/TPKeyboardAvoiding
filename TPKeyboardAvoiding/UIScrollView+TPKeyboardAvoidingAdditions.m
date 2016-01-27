@@ -356,6 +356,11 @@ static const int kStateKey;
     __block CGFloat offset = 0.0;
 
     CGRect subviewRect = [view convertRect:view.bounds toView:self];
+    
+    // Allow views to specify their need to float to the top instead of towards the middle.
+    if ( [view respondsToSelector:@selector(TPKeyboardAvoiding_idealOffsetForViewAlwaysTop)] && [((id<TPKeyboardAvoidingAdditionsOptions>)view) TPKeyboardAvoiding_idealOffsetForViewAlwaysTop] ) {
+        return subviewRect.origin.y;
+    }
 
     __block CGFloat padding = 0.0;
     __block UIEdgeInsets contentInset;
