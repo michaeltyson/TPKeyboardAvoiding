@@ -334,6 +334,10 @@ static const int kStateKey;
 
     CGRect subviewRect = [view convertRect:view.bounds toView:self];
     
+    // Allow views to specify their need to float to the top instead of towards the middle.
+    if([view respondsToSelector:@selector(TPKeyboardAvoiding_idealOffsetForViewAlwaysTop)] && [((id<TPKeyboardAvoidingAdditionsOptions>)view) TPKeyboardAvoiding_idealOffsetForViewAlwaysTop])
+        return subviewRect.origin.y;
+
     // Attempt to center the subview in the visible space, but if that means there will be less than kMinimumScrollOffsetPadding
     // pixels above the view, then substitute kMinimumScrollOffsetPadding
     CGFloat padding = (viewAreaHeight - subviewRect.size.height) / 2;
