@@ -44,43 +44,44 @@ static const int kStateKey;
 
 - (void)TPKeyboardAvoiding_keyboardWillShow:(NSNotification*)notification {
 
+    CGRect keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    if (CGRectIsEmpty(keyboardRect)) {
+        return;
+    }
+
+    TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
+
+    if ( state.ignoringNotifications ) {
+        return;
+    }
+
+    state.keyboardRect = keyboardRect;
+
+    if ( !state.keyboardVisible ) {
+        state.priorInset = self.contentInset;
+        state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
+        state.priorPagingEnabled = self.pagingEnabled;
+    }
+
+    state.keyboardVisible = YES;
+    self.pagingEnabled = NO;
+
+    if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
+        state.priorContentSize = self.contentSize;
+
+        if ( CGSizeEqualToSize(self.contentSize, CGSizeZero) ) {
+            // Set the content size, if it's not set. Do not set content size explicitly if auto-layout
+            // is being used to manage subviews
+            self.contentSize = [self TPKeyboardAvoiding_calculatedContentSizeFromSubviewFrames];
+        }
+    }
+    
     // Delay until a future run loop such that the cursor position is available in a text view
     // In other words, it's not available (specifically, the prior cursor position is returned) when the first keyboard position change notification fires
     // NOTE: Unfortunately, using dispatch_async(main_queue) did not result in a sufficient-enough delay
     // for the text view's current cursor position to be available
     dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC));
     dispatch_after(delay, dispatch_get_main_queue(), ^{
-        CGRect keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
-        if (CGRectIsEmpty(keyboardRect)) {
-            return;
-        }
-        
-        TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
-        
-        if ( state.ignoringNotifications ) {
-            return;
-        }
-        
-        state.keyboardRect = keyboardRect;
-        
-        if ( !state.keyboardVisible ) {
-            state.priorInset = self.contentInset;
-            state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
-            state.priorPagingEnabled = self.pagingEnabled;
-        }
-        
-        state.keyboardVisible = YES;
-        self.pagingEnabled = NO;
-            
-        if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
-            state.priorContentSize = self.contentSize;
-            
-            if ( CGSizeEqualToSize(self.contentSize, CGSizeZero) ) {
-                // Set the content size, if it's not set. Do not set content size explicitly if auto-layout
-                // is being used to manage subviews
-                self.contentSize = [self TPKeyboardAvoiding_calculatedContentSizeFromSubviewFrames];
-            }
-        }
         
         // Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
         [UIView beginAnimations:nil context:NULL];
