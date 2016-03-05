@@ -43,31 +43,32 @@ static const int kStateKey;
 }
 
 - (void)TPKeyboardAvoiding_keyboardWillShow:(NSNotification*)notification {
+
     CGRect keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
     if (CGRectIsEmpty(keyboardRect)) {
         return;
     }
-    
+
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
-    
+
     if ( state.ignoringNotifications ) {
         return;
     }
-    
+
     state.keyboardRect = keyboardRect;
-    
+
     if ( !state.keyboardVisible ) {
         state.priorInset = self.contentInset;
         state.priorScrollIndicatorInsets = self.scrollIndicatorInsets;
         state.priorPagingEnabled = self.pagingEnabled;
     }
-    
+
     state.keyboardVisible = YES;
     self.pagingEnabled = NO;
-        
+
     if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
         state.priorContentSize = self.contentSize;
-        
+
         if ( CGSizeEqualToSize(self.contentSize, CGSizeZero) ) {
             // Set the content size, if it's not set. Do not set content size explicitly if auto-layout
             // is being used to manage subviews
@@ -75,31 +76,39 @@ static const int kStateKey;
         }
     }
     
-    // Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
-    [UIView beginAnimations:nil context:NULL];
-    
-    [UIView setAnimationDelegate:self];
-    [UIView setAnimationWillStartSelector:@selector(keyboardViewAppear:context:)];
-    [UIView setAnimationDidStopSelector:@selector(keyboardViewDisappear:finished:context:)];
-    
-    [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
-    [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
-    
-    self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
-    
-    UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
-    if ( firstResponder ) {
-        CGFloat viewableHeight = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
-        [self setContentOffset:CGPointMake(self.contentOffset.x,
-                                           [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
-                                                                 withViewingAreaHeight:viewableHeight])
-                      animated:NO];
-    }
-    
-    self.scrollIndicatorInsets = self.contentInset;
-    [self layoutIfNeeded];
-    
-    [UIView commitAnimations];
+    // Delay until a future run loop such that the cursor position is available in a text view
+    // In other words, it's not available (specifically, the prior cursor position is returned) when the first keyboard position change notification fires
+    // NOTE: Unfortunately, using dispatch_async(main_queue) did not result in a sufficient-enough delay
+    // for the text view's current cursor position to be available
+    dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC));
+    dispatch_after(delay, dispatch_get_main_queue(), ^{
+        
+        // Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
+        [UIView beginAnimations:nil context:NULL];
+        
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationWillStartSelector:@selector(keyboardViewAppear:context:)];
+        [UIView setAnimationDidStopSelector:@selector(keyboardViewDisappear:finished:context:)];
+        
+        [UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
+        [UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
+        
+        self.contentInset = [self TPKeyboardAvoiding_contentInsetForKeyboard];
+        
+        UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
+        if ( firstResponder ) {
+            CGFloat viewableHeight = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
+            [self setContentOffset:CGPointMake(self.contentOffset.x,
+                                               [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
+                                                                     withViewingAreaHeight:viewableHeight])
+                          animated:NO];
+        }
+        
+        self.scrollIndicatorInsets = self.contentInset;
+        [self layoutIfNeeded];
+        
+        [UIView commitAnimations];
+    });
 }
 
 - (void)keyboardViewAppear:(NSString *)animationID context:(void *)context {
@@ -330,21 +339,55 @@ static const int kStateKey;
 
 -(CGFloat)TPKeyboardAvoiding_idealOffsetForView:(UIView *)view withViewingAreaHeight:(CGFloat)viewAreaHeight {
     CGSize contentSize = self.contentSize;
-    CGFloat offset = 0.0;
+    __block CGFloat offset = 0.0;
 
     CGRect subviewRect = [view convertRect:view.bounds toView:self];
-    
-    // Attempt to center the subview in the visible space, but if that means there will be less than kMinimumScrollOffsetPadding
-    // pixels above the view, then substitute kMinimumScrollOffsetPadding
-    CGFloat padding = (viewAreaHeight - subviewRect.size.height) / 2;
-    if ( padding < kMinimumScrollOffsetPadding ) {
-        padding = kMinimumScrollOffsetPadding;
-    }
 
-    // Ideal offset places the subview rectangle origin "padding" points from the top of the scrollview.
-    // If there is a top contentInset, also compensate for this so that subviewRect will not be placed under
-    // things like navigation bars.
-    offset = subviewRect.origin.y - padding - self.contentInset.top;
+    __block CGFloat padding = 0.0;
+
+    void(^centerViewInViewableArea)()  = ^ {
+        // Attempt to center the subview in the visible space
+        padding = (viewAreaHeight - subviewRect.size.height) / 2;
+
+        // But if that means there will be less than kMinimumScrollOffsetPadding
+        // pixels above the view, then substitute kMinimumScrollOffsetPadding
+        if (padding < kMinimumScrollOffsetPadding ) {
+            padding = kMinimumScrollOffsetPadding;
+        }
+
+        // Ideal offset places the subview rectangle origin "padding" points from the top of the scrollview.
+        // If there is a top contentInset, also compensate for this so that subviewRect will not be placed under
+        // things like navigation bars.
+        offset = subviewRect.origin.y - padding - self.contentInset.top;
+    };
+
+    // If possible, center the caret in the visible space. Otherwise, center the entire view in the visible space.
+    if ([view conformsToProtocol:@protocol(UITextInput)]) {
+        UIView <UITextInput> *textInput = (UIView <UITextInput>*)view;
+        UITextPosition *caretPosition = [textInput selectedTextRange].start;
+        if (caretPosition) {
+            CGRect caretRect = [self convertRect:[textInput caretRectForPosition:caretPosition] fromView:textInput];
+
+            // Attempt to center the cursor in the visible space
+            // pixels above the view, then substitute kMinimumScrollOffsetPadding
+            padding = (viewAreaHeight - caretRect.size.height) / 2;
+
+            // But if that means there will be less than kMinimumScrollOffsetPadding
+            // pixels above the view, then substitute kMinimumScrollOffsetPadding
+            if (padding < kMinimumScrollOffsetPadding ) {
+                padding = kMinimumScrollOffsetPadding;
+            }
+
+            // Ideal offset places the subview rectangle origin "padding" points from the top of the scrollview.
+            // If there is a top contentInset, also compensate for this so that subviewRect will not be placed under
+            // things like navigation bars.
+            offset = caretRect.origin.y - padding - self.contentInset.top;
+        } else {
+            centerViewInViewableArea();
+        }
+    } else {
+        centerViewInViewableArea();
+    }
     
     // Constrain the new contentOffset so we can't scroll past the bottom. Note that we don't take the bottom
     // inset into account, as this is manipulated to make space for the keyboard.
