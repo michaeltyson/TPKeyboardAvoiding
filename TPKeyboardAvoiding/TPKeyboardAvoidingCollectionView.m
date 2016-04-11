@@ -8,6 +8,8 @@
 
 #import "TPKeyboardAvoidingCollectionView.h"
 
+#if ! TARGET_OS_TV
+
 @interface TPKeyboardAvoidingCollectionView () <UITextFieldDelegate, UITextViewDelegate>
 @end
 
@@ -111,3 +113,6 @@
 }
 
 @end
+
+#endif
+

@@ -8,6 +8,8 @@
 
 #import "TPKeyboardAvoidingScrollView.h"
 
+#if ! TARGET_OS_TV
+
 @interface TPKeyboardAvoidingScrollView () <UITextFieldDelegate, UITextViewDelegate>
 @end
 
@@ -90,3 +92,6 @@
 }
 
 @end
+
+#endif
+
