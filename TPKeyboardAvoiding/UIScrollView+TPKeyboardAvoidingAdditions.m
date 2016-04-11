@@ -7,6 +7,9 @@
 //
 
 #import "UIScrollView+TPKeyboardAvoidingAdditions.h"
+
+#if ! TARGET_OS_TV
+
 #import "TPKeyboardAvoidingScrollView.h"
 #import <objc/runtime.h>
 
@@ -387,3 +390,5 @@ static const int kStateKey;
 
 @implementation TPKeyboardAvoidingState
 @end
+
+#endif

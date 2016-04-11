@@ -7,9 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+
+#if ! TARGET_OS_TV
+
 #import "UIScrollView+TPKeyboardAvoidingAdditions.h"
 
 @interface TPKeyboardAvoidingCollectionView : UICollectionView <UITextFieldDelegate, UITextViewDelegate>
 - (BOOL)focusNextTextField;
 - (void)scrollToActiveTextField;
 @end
+
+#endif

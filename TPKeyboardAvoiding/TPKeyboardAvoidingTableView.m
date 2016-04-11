@@ -8,6 +8,8 @@
 
 #import "TPKeyboardAvoidingTableView.h"
 
+#if ! TARGET_OS_TV
+
 @interface TPKeyboardAvoidingTableView () <UITextFieldDelegate, UITextViewDelegate>
 @end
 
@@ -114,3 +116,6 @@
 }
 
 @end
+
+#endif
+
