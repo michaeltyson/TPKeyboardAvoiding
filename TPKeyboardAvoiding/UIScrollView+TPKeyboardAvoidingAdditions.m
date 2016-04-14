@@ -25,7 +25,7 @@ static const int kStateKey;
 @property (nonatomic, assign) CGSize       priorContentSize;
 @property (nonatomic, assign) BOOL         priorPagingEnabled;
 @property (nonatomic, assign) BOOL         ignoringNotifications;
-@property(nonatomic, assign) BOOL keyboardAnimationInProgress;
+@property (nonatomic, assign) BOOL         keyboardAnimationInProgress;
 @end
 
 @implementation UIScrollView (TPKeyboardAvoidingAdditions)
