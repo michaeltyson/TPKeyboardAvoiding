@@ -12,6 +12,7 @@
 
 static const CGFloat kCalculatedContentPadding = 10;
 static const CGFloat kMinimumScrollOffsetPadding = 20;
+static const CGFloat kAnimationDuration = 0.25;
 
 static const int kStateKey;
 
@@ -217,11 +218,10 @@ static const int kStateKey;
 
     // Ordinarily we'd use -setContentOffset:animated:YES here, but it interferes with UIScrollView
     // behavior which automatically ensures that the first responder is within its bounds
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self setContentOffset:idealOffset animated:YES];
-        
+    [UIView animateWithDuration:kAnimationDuration animations:^{
+        self.contentOffset = idealOffset;
         state.ignoringNotifications = NO;
-    });
+    }];
 }
 
 #pragma mark - Helpers
