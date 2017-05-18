@@ -13,6 +13,8 @@
 static const CGFloat kCalculatedContentPadding = 10;
 static const CGFloat kMinimumScrollOffsetPadding = 20;
 
+static NSString * const kUIKeyboardAnimationDurationUserInfoKey = @"UIKeyboardAnimationDurationUserInfoKey";
+
 static const int kStateKey;
 
 #define _UIKeyboardFrameEndUserInfoKey (&UIKeyboardFrameEndUserInfoKey != NULL ? UIKeyboardFrameEndUserInfoKey : @"UIKeyboardBoundsUserInfoKey")
@@ -26,6 +28,7 @@ static const int kStateKey;
 @property (nonatomic, assign) BOOL         priorPagingEnabled;
 @property (nonatomic, assign) BOOL         ignoringNotifications;
 @property (nonatomic, assign) BOOL         keyboardAnimationInProgress;
+@property (nonatomic, assign) CGFloat      animationDuration;
 @end
 
 @implementation UIScrollView (TPKeyboardAvoidingAdditions)
@@ -43,14 +46,16 @@ static const int kStateKey;
 }
 
 - (void)TPKeyboardAvoiding_keyboardWillShow:(NSNotification*)notification {
+    NSDictionary *info = [notification userInfo];
+    TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
+    
+    state.animationDuration = [[info objectForKey:kUIKeyboardAnimationDurationUserInfoKey] doubleValue];
 
-    CGRect keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    CGRect keyboardRect = [self convertRect:[[info objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
     if (CGRectIsEmpty(keyboardRect)) {
         return;
     }
-
-    TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
-
+    
     if ( state.ignoringNotifications ) {
         return;
     }
@@ -217,11 +222,11 @@ static const int kStateKey;
 
     // Ordinarily we'd use -setContentOffset:animated:YES here, but it interferes with UIScrollView
     // behavior which automatically ensures that the first responder is within its bounds
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self setContentOffset:idealOffset animated:YES];
-        
+    [UIView animateWithDuration:state.animationDuration animations:^{
+        self.contentOffset = idealOffset;
+    } completion:^(BOOL finished) {
         state.ignoringNotifications = NO;
-    });
+    }];
 }
 
 #pragma mark - Helpers
