@@ -423,6 +423,10 @@ static const int kStateKey;
             ((UITextField*)view).returnKeyType = UIReturnKeyDone;
         }
     }
+	
+	if ( [view isKindOfClass:[UITextView class]]) {
+		[(UITextView*)view setDelegate:(id<UITextViewDelegate>)self];
+	}
 }
 
 @end
