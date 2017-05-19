@@ -26,6 +26,9 @@ static const int kGroupCount = 5;
         UITextField * textField = [[UITextField alloc] initWithFrame:CGRectZero];
         textField.translatesAutoresizingMaskIntoConstraints = NO;
         textField.placeholder = [NSString stringWithFormat:@"Field %d", i];
+        if (i == 39) {
+            textField.secureTextEntry = YES;
+        }
         textField.borderStyle = UITextBorderStyleRoundedRect;
         [self.scrollView addSubview:textField];
         
