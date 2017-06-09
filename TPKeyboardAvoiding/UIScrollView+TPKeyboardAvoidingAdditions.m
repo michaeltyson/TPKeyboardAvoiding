@@ -121,8 +121,8 @@ static const int kStateKey;
     self.keyboardAvoidingState.keyboardAnimationInProgress = true;
 }
 
-- (void)keyboardViewDisappear:(NSString *)animationID finished:(BOOL)finished context:(void *)context {
-    if (finished) {
+- (void)keyboardViewDisappear:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
+    if (finished.boolValue) {
         self.keyboardAvoidingState.keyboardAnimationInProgress = false;
     }
 }
