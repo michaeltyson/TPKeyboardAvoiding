@@ -49,7 +49,10 @@
 }
 
 -(BOOL)hasAutomaticKeyboardAvoidingBehaviour {
-    if ( [self.delegate isKindOfClass:[UITableViewController class]] ) {
+    // As library supports versions of iOS prior to 9 and iOS 8 SDK provides delegate property as assign, trying to
+    // access delegate property here in case of delegate is already deallocated causes crash on iOS 8 and earlier.
+    if ( [[[UIDevice currentDevice] systemVersion] integerValue] >= 9
+        && [self.delegate isKindOfClass:[UITableViewController class]] ) {
         // Theory: Apps built using the iOS 8.3 SDK (probably: older SDKs not tested) seem to handle keyboard
         // avoiding automatically with UITableViewController. This doesn't seem to be documented anywhere
         // by Apple, so results obtained only empirically.
