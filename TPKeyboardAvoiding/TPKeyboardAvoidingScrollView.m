@@ -15,7 +15,7 @@
 
 #pragma mark - Setup/Teardown
 
-- (void)setup {
+- (void)setup_ {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TPKeyboardAvoiding_keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(TPKeyboardAvoiding_keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollToActiveTextField) name:UITextViewTextDidBeginEditingNotification object:nil];
@@ -24,13 +24,13 @@
 
 -(id)initWithFrame:(CGRect)frame {
     if ( !(self = [super initWithFrame:frame]) ) return nil;
-    [self setup];
+    [self setup_];
     return self;
 }
 
 -(void)awakeFromNib {
     [super awakeFromNib];
-    [self setup];
+    [self setup_];
 }
 
 -(void)dealloc {
