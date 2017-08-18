@@ -51,8 +51,13 @@ static const int kStateKey;
     
     state.animationDuration = [[info objectForKey:kUIKeyboardAnimationDurationUserInfoKey] doubleValue];
 
+    CGRect begin = [[notification.userInfo objectForKey:@"UIKeyboardFrameBeginUserInfoKey"] CGRectValue];
     CGRect keyboardRect = [self convertRect:[[info objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
     if (CGRectIsEmpty(keyboardRect)) {
+        return;
+    }
+    // thirdpart keyboard solution
+    if(!(begin.size.height > 0 && (begin.origin.y - keyboardRect.origin.y > 0))) {
         return;
     }
     
