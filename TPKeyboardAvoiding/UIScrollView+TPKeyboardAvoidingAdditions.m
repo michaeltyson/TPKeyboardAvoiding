@@ -351,7 +351,7 @@ static const int kStateKey;
 
     __block CGFloat padding = 0.0;
 
-    void(^centerViewInViewableArea)()  = ^ {
+    void(^centerViewInViewableArea)(void)  = ^ {
         // Attempt to center the subview in the visible space
         padding = (viewAreaHeight - subviewRect.size.height) / 2;
 
