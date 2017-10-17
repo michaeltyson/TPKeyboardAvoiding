@@ -362,7 +362,7 @@ static const int kStateKey;
     contentInset = self.contentInset;
 #endif
 
-    void(^centerViewInViewableArea)()  = ^ {
+    void(^centerViewInViewableArea)(void)  = ^ {
         // Attempt to center the subview in the visible space
         padding = (viewAreaHeight - subviewRect.size.height) / 2;
 
