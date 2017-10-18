@@ -350,6 +350,17 @@ static const int kStateKey;
     CGRect subviewRect = [view convertRect:view.bounds toView:self];
 
     __block CGFloat padding = 0.0;
+    __block UIEdgeInsets contentInset;
+    
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        contentInset = self.adjustedContentInset;
+    } else {
+        contentInset = self.contentInset;
+    }
+#else
+    contentInset = self.contentInset;
+#endif
 
     void(^centerViewInViewableArea)()  = ^ {
         // Attempt to center the subview in the visible space
@@ -364,7 +375,7 @@ static const int kStateKey;
         // Ideal offset places the subview rectangle origin "padding" points from the top of the scrollview.
         // If there is a top contentInset, also compensate for this so that subviewRect will not be placed under
         // things like navigation bars.
-        offset = subviewRect.origin.y - padding - self.contentInset.top;
+        offset = subviewRect.origin.y - padding - contentInset.top;
     };
 
     // If possible, center the caret in the visible space. Otherwise, center the entire view in the visible space.
@@ -387,7 +398,7 @@ static const int kStateKey;
             // Ideal offset places the subview rectangle origin "padding" points from the top of the scrollview.
             // If there is a top contentInset, also compensate for this so that subviewRect will not be placed under
             // things like navigation bars.
-            offset = caretRect.origin.y - padding - self.contentInset.top;
+            offset = caretRect.origin.y - padding - contentInset.top;
         } else {
             centerViewInViewableArea();
         }
@@ -397,14 +408,14 @@ static const int kStateKey;
     
     // Constrain the new contentOffset so we can't scroll past the bottom. Note that we don't take the bottom
     // inset into account, as this is manipulated to make space for the keyboard.
-    CGFloat maxOffset = contentSize.height - viewAreaHeight - self.contentInset.top;
+    CGFloat maxOffset = contentSize.height - viewAreaHeight - contentInset.top;
     if (offset > maxOffset) {
         offset = maxOffset;
     }
     
     // Constrain the new contentOffset so we can't scroll past the top, taking contentInsets into account
-    if ( offset < -self.contentInset.top ) {
-        offset = -self.contentInset.top;
+    if ( offset < -contentInset.top ) {
+        offset = -contentInset.top;
     }
 
     return offset;
