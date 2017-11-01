@@ -423,7 +423,7 @@ static const int kStateKey;
 
 - (void)TPKeyboardAvoiding_initializeView:(UIView*)view {
     if ( [view isKindOfClass:[UITextField class]]
-            && ((UITextField*)view).returnKeyType == UIReturnKeyDefault
+            && (((UITextField*)view).returnKeyType == UIReturnKeyDefault || (((UITextField*)view).returnKeyType == UIReturnKeyNext))
             && (![(UITextField*)view delegate] || [(UITextField*)view delegate] == (id<UITextFieldDelegate>)self) ) {
         [(UITextField*)view setDelegate:(id<UITextFieldDelegate>)self];
         UIView *otherView = [self TPKeyboardAvoiding_findNextInputViewAfterView:view beneathView:self];
