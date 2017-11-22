@@ -29,6 +29,15 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "4C9B0A981B3CEE6E00090084"
+            BuildableName = "TPKeyboardAvoidingSample.app"
+            BlueprintName = "TPKeyboardAvoidingSample"
+            ReferencedContainer = "container:TPKeyboardAvoidingSample.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
