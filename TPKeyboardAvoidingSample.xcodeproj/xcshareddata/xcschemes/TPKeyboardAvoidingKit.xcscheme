@@ -30,6 +30,15 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "4C9B0A981B3CEE6E00090084"
+            BuildableName = "TPKeyboardAvoidingSample.app"
+            BlueprintName = "TPKeyboardAvoidingSample"
+            ReferencedContainer = "container:TPKeyboardAvoidingSample.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -44,15 +53,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3E081E471C0E63A40003DFF8"
-            BuildableName = "TPKeyboardAvoidingKit.framework"
-            BlueprintName = "TPKeyboardAvoidingKit"
+            BlueprintIdentifier = "4C9B0A981B3CEE6E00090084"
+            BuildableName = "TPKeyboardAvoidingSample.app"
+            BlueprintName = "TPKeyboardAvoidingSample"
             ReferencedContainer = "container:TPKeyboardAvoidingSample.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
