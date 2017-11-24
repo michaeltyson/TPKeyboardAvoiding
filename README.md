@@ -1,5 +1,6 @@
 TPKeyboardAvoiding
 ==================
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 A drop-in universal solution for moving text fields out of the way of the keyboard in iOS.
 
