@@ -345,7 +345,7 @@ static const int kStateKey;
     if (keyboardRect.size.height == 0) {
         newInset.bottom = state.priorInset.bottom;
     } else {
-        newInset.bottom = keyboardRect.size.height - MAX((CGRectGetMaxY(keyboardRect) - CGRectGetMaxY(self.bounds)), 0);
+        newInset.bottom = MAX(keyboardRect.size.height - MAX((CGRectGetMaxY(keyboardRect) - CGRectGetMaxY(self.bounds)), 0), 0);
     }
 
     return newInset;
