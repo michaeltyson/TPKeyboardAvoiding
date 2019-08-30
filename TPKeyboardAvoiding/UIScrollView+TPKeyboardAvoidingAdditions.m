@@ -18,6 +18,7 @@ static NSString * const kUIKeyboardAnimationDurationUserInfoKey = @"UIKeyboardAn
 static const int kStateKey;
 
 #define _UIKeyboardFrameEndUserInfoKey (&UIKeyboardFrameEndUserInfoKey != NULL ? UIKeyboardFrameEndUserInfoKey : @"UIKeyboardBoundsUserInfoKey")
+#define _UIKeyboardFrameBeginUserInfoKey (&UIKeyboardFrameBeginUserInfoKey != NULL ? UIKeyboardFrameBeginUserInfoKey : @"UIKeyboardBoundsUserInfoKey")
 
 @interface TPKeyboardAvoidingState : NSObject
 @property (nonatomic, assign) UIEdgeInsets priorInset;
@@ -127,7 +128,7 @@ static const int kStateKey;
 }
 
 - (void)TPKeyboardAvoiding_keyboardWillHide:(NSNotification*)notification {
-    CGRect keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    CGRect keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameBeginUserInfoKey] CGRectValue] fromView:nil];
     if (CGRectIsEmpty(keyboardRect) && !self.keyboardAvoidingState.keyboardAnimationInProgress) {
         return;
     }
