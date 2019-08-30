@@ -127,7 +127,7 @@ static const int kStateKey;
 }
 
 - (void)TPKeyboardAvoiding_keyboardWillHide:(NSNotification*)notification {
-    CGRect keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    CGRect keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue] fromView:nil];
     if (CGRectIsEmpty(keyboardRect) && !self.keyboardAvoidingState.keyboardAnimationInProgress) {
         return;
     }
