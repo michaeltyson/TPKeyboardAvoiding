@@ -97,17 +97,73 @@
     [super touchesEnded:touches withEvent:event];
 }
 
--(BOOL)textFieldShouldReturn:(UITextField *)textField {
-    if ( ![self focusNextTextField] ) {
-        [textField resignFirstResponder];
-    }
-    return YES;
-}
-
 -(void)layoutSubviews {
     [super layoutSubviews];
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(TPKeyboardAvoiding_assignTextDelegateForViewsBeneathView:) object:self];
     [self performSelector:@selector(TPKeyboardAvoiding_assignTextDelegateForViewsBeneathView:) withObject:self afterDelay:0.1];
+}
+
+#pragma mark - UITextField delegate methods
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+    if ( ![self focusNextTextField] ) {
+        [textField resignFirstResponder];
+    }
+    
+    if ([[self textFieldDelegates] objectForKey:textField]
+        && [[[self textFieldDelegates] objectForKey:textField] respondsToSelector:@selector(textFieldShouldReturn:)]) {
+        return [[[self textFieldDelegates] objectForKey:textField] textFieldShouldReturn:textField];
+    }
+    
+    return YES;
+}
+
+-(void)textFieldDidBeginEditing:(UITextField *)textField {
+    if ([[[self textFieldDelegates] objectForKey:textField] respondsToSelector:@selector(textFieldDidBeginEditing:)]) {
+        [[[self textFieldDelegates] objectForKey:textField] textFieldDidBeginEditing:textField];
+    }
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField {
+    if ([[[self textFieldDelegates] objectForKey:textField] respondsToSelector:@selector(textFieldDidEndEditing:)]) {
+        [[[self textFieldDelegates] objectForKey:textField] textFieldDidEndEditing:textField];
+    }
+}
+
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    if ([[self textFieldDelegates] objectForKey:textField]
+        && [[[self textFieldDelegates] objectForKey:textField] respondsToSelector:@selector(textFieldShouldBeginEditing:)]) {
+        return [[[self textFieldDelegates] objectForKey:textField] textFieldShouldBeginEditing:textField];
+    }
+    
+    return YES;
+}
+
+-(BOOL)textFieldShouldEndEditing:(UITextField *)textField {
+    if ([[self textFieldDelegates] objectForKey:textField]
+        && [[[self textFieldDelegates] objectForKey:textField] respondsToSelector:@selector(textFieldShouldEndEditing:)]) {
+        return [[[self textFieldDelegates] objectForKey:textField] textFieldShouldEndEditing:textField];
+    }
+    
+    return YES;
+}
+
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if ([[self textFieldDelegates] objectForKey:textField]
+        && [[[self textFieldDelegates] objectForKey:textField] respondsToSelector:@selector(textField:shouldChangeCharactersInRange:replacementString:)]) {
+        return [[[self textFieldDelegates] objectForKey:textField] textField:textField shouldChangeCharactersInRange:range replacementString:string];
+    }
+    
+    return YES;
+}
+
+-(BOOL)textFieldShouldClear:(UITextField *)textField {
+    if ([[self textFieldDelegates] objectForKey:textField]
+        && [[[self textFieldDelegates] objectForKey:textField] respondsToSelector:@selector(textFieldShouldClear:)]) {
+        return [[[self textFieldDelegates] objectForKey:textField] textFieldShouldClear:textField];
+    }
+    
+    return YES;
 }
 
 @end
