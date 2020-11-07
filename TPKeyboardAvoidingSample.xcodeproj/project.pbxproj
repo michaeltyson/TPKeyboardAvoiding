@@ -143,8 +143,16 @@
 				4C9B0AE11B3CF35400090084 /* TPKeyboardAvoidingTableView.m */,
 				4C9B0AE21B3CF35400090084 /* UIScrollView+TPKeyboardAvoidingAdditions.h */,
 				4C9B0AE31B3CF35400090084 /* UIScrollView+TPKeyboardAvoidingAdditions.m */,
+				E402EFF123F59482009429E7 /* include */,
 			);
 			path = TPKeyboardAvoiding;
+			sourceTree = "<group>";
+		};
+		E402EFF123F59482009429E7 /* include */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = include;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -222,6 +230,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);

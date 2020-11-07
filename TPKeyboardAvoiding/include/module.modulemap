@@ -1,0 +1,8 @@
+module TPKeyboardAvoiding {
+    header "../TPKeyboardAvoidingCollectionView.h"
+    header "../TPKeyboardAvoidingScrollView.h"
+    header "../TPKeyboardAvoidingTableView.h"
+    header "../UIScrollView+TPKeyboardAvoidingAdditions.h"
+
+    export *
+}
