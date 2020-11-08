@@ -20,6 +20,8 @@ static NSString * const kUIKeyboardAnimationDurationUserInfoKey = @"UIKeyboardAn
 
 static const int kStateKey;
 
+static void * TextFieldDelegates = &TextFieldDelegates;
+
 #define _UIKeyboardFrameEndUserInfoKey (&UIKeyboardFrameEndUserInfoKey != NULL ? UIKeyboardFrameEndUserInfoKey : @"UIKeyboardBoundsUserInfoKey")
 #define _UIKeyboardFrameBeginUserInfoKey (&UIKeyboardFrameBeginUserInfoKey != NULL ? UIKeyboardFrameBeginUserInfoKey : @"UIKeyboardBoundsUserInfoKey")
 
@@ -33,6 +35,8 @@ static const int kStateKey;
 @property (nonatomic, assign) BOOL         ignoringNotifications;
 @property (nonatomic, assign) BOOL         keyboardAnimationInProgress;
 @property (nonatomic, assign) CGFloat      animationDuration;
+@property (strong, nonatomic) NSMapTable<UIView *, id<UITextFieldDelegate>>* textFieldDelegates;
+
 @end
 
 @implementation UIScrollView (TPKeyboardAvoidingAdditions)
@@ -214,6 +218,27 @@ static const int kStateKey;
     return NO;
 }
 
+- (BOOL)TPKeyboardAvoiding_focusPrevTextField {
+    UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
+    if ( !firstResponder ) {
+        return NO;
+    }
+    
+    UIView *view = [self TPKeyboardAvoiding_findPrevInputViewAfterView:firstResponder beneathView:self];
+    
+    if ( view ) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0), dispatch_get_main_queue(), ^{
+            TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
+            state.ignoringNotifications = YES;
+            [view becomeFirstResponder];
+            state.ignoringNotifications = NO;
+        });
+        return YES;
+    }
+    
+    return NO;
+}
+
 -(void)TPKeyboardAvoiding_scrollToActiveTextField {
     TPKeyboardAvoidingState *state = self.keyboardAvoidingState;
     
@@ -261,6 +286,12 @@ static const int kStateKey;
     return candidate;
 }
 
+- (UIView*)TPKeyboardAvoiding_findPrevInputViewAfterView:(UIView*)priorView beneathView:(UIView*)view {
+    UIView * candidate = nil;
+    [self TPKeyboardAvoiding_findPrevInputViewBeforeView:priorView beneathView:view bestCandidate:&candidate];
+    return candidate;
+}
+
 - (void)TPKeyboardAvoiding_findNextInputViewAfterView:(UIView*)priorView beneathView:(UIView*)view bestCandidate:(UIView**)bestCandidate {
     // Search recursively for input view below/to right of priorTextField
     CGRect priorFrame = [self convertRect:priorView.frame fromView:priorView.superview];
@@ -276,15 +307,43 @@ static const int kStateKey;
             
             // Find views beneath, or to the right. For those views that match, choose the view closest to the top left
             if ( childView != priorView
-                    && ((fabs(CGRectGetMinY(frame) - CGRectGetMinY(priorFrame)) < FLT_EPSILON && CGRectGetMinX(frame) > CGRectGetMinX(priorFrame))
-                        || CGRectGetMinY(frame) > CGRectGetMinY(priorFrame))
-                    && (!*bestCandidate || heuristic > bestCandidateHeuristic) ) {
+                && ((fabs(CGRectGetMinY(frame) - CGRectGetMinY(priorFrame)) < FLT_EPSILON && CGRectGetMinX(frame) > CGRectGetMinX(priorFrame))
+                    || CGRectGetMinY(frame) > CGRectGetMinY(priorFrame))
+                && (!*bestCandidate || heuristic > bestCandidateHeuristic) ) {
                 
                 *bestCandidate = childView;
                 bestCandidateHeuristic = heuristic;
             }
         } else {
             [self TPKeyboardAvoiding_findNextInputViewAfterView:priorView beneathView:childView bestCandidate:bestCandidate];
+        }
+    }
+}
+
+- (void)TPKeyboardAvoiding_findPrevInputViewBeforeView:(UIView*)priorView beneathView:(UIView*)view bestCandidate:(UIView**)bestCandidate {
+    // Search recursively for input view below/to right of priorTextField
+    CGRect priorFrame = [self convertRect:priorView.frame fromView:priorView.superview];
+    CGRect candidateFrame = *bestCandidate ? [self convertRect:(*bestCandidate).frame fromView:(*bestCandidate).superview] : CGRectZero;
+    CGFloat bestCandidateHeuristic = [self TPKeyboardAvoiding_nextInputViewHeuristicForViewFrame:candidateFrame];
+    
+    for ( UIView *childView in view.subviews ) {
+        if ( [self TPKeyboardAvoiding_viewIsValidKeyViewCandidate:childView] ) {
+            CGRect frame = [self convertRect:childView.frame fromView:view];
+            
+            // Use a heuristic to evaluate candidates
+            CGFloat heuristic = [self TPKeyboardAvoiding_nextInputViewHeuristicForViewFrame:frame];
+            
+            // Find views beneath, or to the right. For those views that match, choose the view closest to the top left
+            if ( childView != priorView
+                && ((fabs(CGRectGetMinY(frame) - CGRectGetMinY(priorFrame)) > -FLT_EPSILON && CGRectGetMinX(frame) < CGRectGetMinX(priorFrame))
+                    || CGRectGetMinY(frame) < CGRectGetMinY(priorFrame))
+                && (!*bestCandidate || heuristic < bestCandidateHeuristic) ) {
+                
+                *bestCandidate = childView;
+                bestCandidateHeuristic = heuristic;
+            }
+        } else {
+            [self TPKeyboardAvoiding_findPrevInputViewBeforeView:priorView beneathView:childView bestCandidate:bestCandidate];
         }
     }
 }
@@ -447,6 +506,16 @@ static const int kStateKey;
 }
 
 - (void)TPKeyboardAvoiding_initializeView:(UIView*)view {
+    
+    if (!self.textFieldDelegates) {
+        self.textFieldDelegates = [NSMapTable weakToWeakObjectsMapTable];
+    }
+    
+    if ([(UITextField*)view delegate] && [(UITextField*)view delegate] != (id<UITextFieldDelegate>)self) {
+        [self.textFieldDelegates setObject:[(UITextField*)view delegate] forKey:view];
+        [(UITextField*)view setDelegate:nil];
+    }
+    
     if ( [view isKindOfClass:[UITextField class]]
             && (((UITextField*)view).returnKeyType == UIReturnKeyDefault || (((UITextField*)view).returnKeyType == UIReturnKeyNext))
             && (![(UITextField*)view delegate] || [(UITextField*)view delegate] == (id<UITextFieldDelegate>)self) ) {
@@ -459,6 +528,14 @@ static const int kStateKey;
             ((UITextField*)view).returnKeyType = UIReturnKeyDone;
         }
     }
+}
+
+- (NSMapTable<UIView *, id<UITextFieldDelegate>>*) textFieldDelegates {
+    return objc_getAssociatedObject(self, TextFieldDelegates);
+}
+
+- (void)setTextFieldDelegates:(NSMapTable<UIView *, id<UITextFieldDelegate>> *)textFieldDelegates {
+    objc_setAssociatedObject(self, TextFieldDelegates, textFieldDelegates, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
