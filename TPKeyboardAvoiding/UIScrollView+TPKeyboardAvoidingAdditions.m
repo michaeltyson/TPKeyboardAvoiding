@@ -55,8 +55,8 @@ static const int kStateKey;
     
     state.animationDuration = [[info objectForKey:kUIKeyboardAnimationDurationUserInfoKey] doubleValue];
 
-    CGRect beginKeyboardRect = [self convertRect:[[info objectForKey:_UIKeyboardFrameBeginUserInfoKey] CGRectValue] fromView:nil];
-    CGRect endKeyboardRect = [self convertRect:[[info objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    CGRect beginKeyboardRect = [[info objectForKey:_UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    CGRect endKeyboardRect = [[info objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue];
     if (CGRectIsEmpty(endKeyboardRect)) {
         self.keyboardAvoidingState.keyboardVisible = NO;
         return;
@@ -138,8 +138,8 @@ static const int kStateKey;
 }
 
 - (void)TPKeyboardAvoiding_keyboardWillHide:(NSNotification*)notification {
-    CGRect beginKeyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameBeginUserInfoKey] CGRectValue] fromView:nil];
-    CGRect endKeyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    CGRect beginKeyboardRect = [[[notification userInfo] objectForKey:_UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    CGRect endKeyboardRect = [[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue];
     if (CGRectIsEmpty(beginKeyboardRect) && !self.keyboardAvoidingState.keyboardAnimationInProgress) {
         return;
     }
