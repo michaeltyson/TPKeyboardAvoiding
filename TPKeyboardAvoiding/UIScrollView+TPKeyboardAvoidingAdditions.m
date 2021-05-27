@@ -357,7 +357,11 @@ static const int kStateKey;
     if (keyboardRect.size.height == 0) {
         newInset.bottom = state.priorInset.bottom;
     } else {
-        newInset.bottom = MAX(keyboardRect.size.height - MAX((CGRectGetMaxY(keyboardRect) - CGRectGetMaxY(self.bounds)), 0), 0);
+        CGRect frameInWindowCoordinateSpace = [self.superview convertRect:self.frame toView:nil];
+        CGRect intersection = CGRectIntersection(keyboardRect, frameInWindowCoordinateSpace);
+        if (! CGRectIsNull(intersection)) {
+            newInset.bottom = intersection.size.height;
+        }
     }
 
     return newInset;
