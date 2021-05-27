@@ -55,8 +55,8 @@ static const int kStateKey;
     
     state.animationDuration = [[info objectForKey:kUIKeyboardAnimationDurationUserInfoKey] doubleValue];
 
-    CGRect beginKeyboardRect = [self convertRect:[[info objectForKey:_UIKeyboardFrameBeginUserInfoKey] CGRectValue] fromView:nil];
-    CGRect endKeyboardRect = [self convertRect:[[info objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    CGRect beginKeyboardRect = [[info objectForKey:_UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    CGRect endKeyboardRect = [[info objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue];
     if (CGRectIsEmpty(endKeyboardRect)) {
         self.keyboardAvoidingState.keyboardVisible = NO;
         return;
@@ -138,8 +138,8 @@ static const int kStateKey;
 }
 
 - (void)TPKeyboardAvoiding_keyboardWillHide:(NSNotification*)notification {
-    CGRect beginKeyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameBeginUserInfoKey] CGRectValue] fromView:nil];
-    CGRect endKeyboardRect = [self convertRect:[[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+    CGRect beginKeyboardRect = [[[notification userInfo] objectForKey:_UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    CGRect endKeyboardRect = [[[notification userInfo] objectForKey:_UIKeyboardFrameEndUserInfoKey] CGRectValue];
     if (CGRectIsEmpty(beginKeyboardRect) && !self.keyboardAvoidingState.keyboardAnimationInProgress) {
         return;
     }
@@ -357,7 +357,11 @@ static const int kStateKey;
     if (keyboardRect.size.height == 0) {
         newInset.bottom = state.priorInset.bottom;
     } else {
-        newInset.bottom = MAX(keyboardRect.size.height - MAX((CGRectGetMaxY(keyboardRect) - CGRectGetMaxY(self.bounds)), 0), 0);
+        CGRect frameInWindowCoordinateSpace = [self.superview convertRect:self.frame toView:nil];
+        CGRect intersection = CGRectIntersection(keyboardRect, frameInWindowCoordinateSpace);
+        if (! CGRectIsNull(intersection)) {
+            newInset.bottom = intersection.size.height;
+        }
     }
 
     return newInset;
